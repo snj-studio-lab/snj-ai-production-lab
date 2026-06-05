@@ -577,6 +577,16 @@ h3 {
   padding: 22px;
 }
 
+.project-card-link {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+.project-card-link:hover {
+  border-color: var(--line-strong);
+}
+
 .project-card {
   min-height: 210px;
   background:

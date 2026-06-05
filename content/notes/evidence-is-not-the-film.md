@@ -3,7 +3,7 @@ title_ko: "Evidence Is Not the Film"
 title_en: "Evidence Is Not the Film"
 date: "2026-06-04"
 category: "Creative System"
-summary_ko: "증거 화면, CCTV, 브리핑은 영화를 보조할 수 있지만 영화 자체가 될 수는 없다는 제작 보고서입니다."
+summary_ko: "증거 화면이 장면을 보조하는 도구가 아니라 작품 전체의 형식으로 굳어졌을 때 생긴 문제를 정리한 제작 회고입니다."
 summary_en: "Research, references, and proof materials support the video, but they are not the finished cinematic experience."
 ---
 

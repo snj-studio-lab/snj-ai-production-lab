@@ -86,12 +86,13 @@ const projects = {
     {
       title: "S&J Studio Lab",
       label: "공개 제작 실험실",
-      summary: "AI 제작 실패 로그, 템플릿, 공개 노트를 정리하는 제작 실험실입니다."
+      summary: "AI 제작 실패 로그, 템플릿, 공개 노트를 정리하는 제작 실험실입니다.",
+      href: "https://github.com/snj-studio-lab/snj-ai-production-lab"
     },
     {
       title: "대한 타임슬립 본부 | Korea Time-Slip HQ",
       label: "AI 시네마틱 시리즈",
-      summary: "대한민국 타임슬립 밀리터리 드라마 시리즈입니다."
+      summary: "한국사를 바탕으로 한 대체역사 타임슬립 밀리터리 드라마 시리즈입니다."
     },
     {
       title: "GMI",
@@ -103,7 +104,8 @@ const projects = {
     {
       title: "S&J Studio Lab",
       label: "Public Lab",
-      summary: "Public notes and templates from AI production experiments."
+      summary: "Public notes and templates from AI production experiments.",
+      href: "https://github.com/snj-studio-lab/snj-ai-production-lab"
     },
     {
       title: "Korea Time-Slip HQ",
@@ -284,7 +286,6 @@ function pageShell({ title, description, active = "", body, depth = 0, locale = 
       </div>
       <div class="footer-links">
         <a href="${site.github}">GitHub</a>
-        <a href="mailto:${site.email}">Email</a>
       </div>
     </footer>
   </body>
@@ -306,13 +307,17 @@ function entryCards(entries, locale, depth = 0) {
 }
 
 function projectCards(locale) {
-  return projects[locale].map((project) => `
-    <article class="project-card">
+  return projects[locale].map((project) => {
+    const content = `
       <span>${escapeHtml(project.label)}</span>
       <h2>${escapeHtml(project.title)}</h2>
       <p>${escapeHtml(project.summary)}</p>
-    </article>
-  `).join("");
+    `;
+    if (project.href) {
+      return `<a class="project-card project-card-link" href="${escapeHtml(project.href)}">${content}</a>`;
+    }
+    return `<article class="project-card">${content}</article>`;
+  }).join("");
 }
 
 function creatorCard(locale) {
@@ -508,7 +513,7 @@ export async function build() {
       <section class="page-title">
         <p class="eyebrow">Lab Notes</p>
         <h1>AI 영상 제작의 실패, 수정, 반복 가능성을 기록합니다.</h1>
-        <p>마크다운 기반으로 정리되는 제작 노트입니다. 새 파일을 추가하면 목록에도 함께 반영됩니다.</p>
+        <p>실제 제작 과정에서 얻은 실패와 수정 기준을 정리한 공개 노트입니다.</p>
       </section>
       <section class="entry-list wide">${entryCards(notes, "ko", 1)}</section>
     `
