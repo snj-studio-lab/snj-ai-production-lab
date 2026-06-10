@@ -588,6 +588,8 @@ h3 {
 }
 
 .project-card {
+  display: flex;
+  flex-direction: column;
   min-height: 210px;
   background:
     linear-gradient(145deg, rgba(121,255,201,0.08), transparent 42%),
@@ -617,6 +619,34 @@ h3 {
 .prose li,
 .contact-band p {
   color: var(--muted);
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.project-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 8px 12px;
+  background: rgba(121, 255, 201, 0.1);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 830;
+  text-decoration: none;
+}
+
+.project-action:hover {
+  border-color: var(--accent);
+  background: rgba(121, 255, 201, 0.16);
 }
 
 .entry-list {

@@ -10,7 +10,8 @@ const publicDir = path.join(root, "public");
 const site = {
   title: "S&J Studio Lab",
   email: "snj.storylab@gmail.com",
-  github: "https://github.com/snj-studio-lab/snj-ai-production-lab"
+  github: "https://github.com/snj-studio-lab/snj-ai-production-lab",
+  koreaTimeslip: "https://www.youtube.com/@KR_Timeslip"
 };
 
 const navLabels = {
@@ -42,7 +43,7 @@ const copy = {
     whatTitle: "완성본보다 과정을 기록하는 제작 노트",
     whatBody: "S&J Studio Lab은 AI 영상 제작을 단순한 프롬프트 문제가 아니라 기획, 정보, 이미지, 영상, 자막, 검수, 업로드가 연결된 제작 시스템 문제로 다룹니다.",
     projects: "현재 프로젝트",
-    projectsTitle: "공개 가능한 제작 실험",
+    projectsTitle: "대표 작업과 공개 제작 기록",
     notes: "최근 Lab Notes",
     notesTitle: "실패, 수정, 반복 가능한 제작 지식",
     templates: "공개 제작 템플릿",
@@ -65,7 +66,7 @@ const copy = {
     whatTitle: "A public notebook for production process, not only finished work.",
     whatBody: "S&J Studio Lab treats AI video as a production system: planning, references, images, shots, subtitles, review, packaging, and upload decisions all have to work together.",
     projects: "Current Projects",
-    projectsTitle: "Active public-facing work",
+    projectsTitle: "Projects and proof of work",
     notes: "Latest Lab Notes",
     notesTitle: "Failures, revisions, and reusable workflow knowledge",
     templates: "Public Templates",
@@ -87,17 +88,27 @@ const projects = {
       title: "S&J Studio Lab",
       label: "공개 제작 실험실",
       summary: "AI 제작 실패 로그, 템플릿, 공개 노트를 정리하는 제작 실험실입니다.",
-      href: "https://github.com/snj-studio-lab/snj-ai-production-lab"
+      actions: [
+        { label: "Lab Notes 보기", href: "lab-notes/" },
+        { label: "GitHub 보기", href: site.github, external: true }
+      ]
     },
     {
       title: "대한 타임슬립 본부 | Korea Time-Slip HQ",
-      label: "AI 시네마틱 시리즈",
-      summary: "한국사를 바탕으로 한 대체역사 타임슬립 밀리터리 드라마 시리즈입니다."
+      label: "대표 작업 / 공개 채널",
+      summary: "한국사를 바탕으로 한 대체역사 타임슬립 밀리터리 드라마 시리즈입니다.",
+      actions: [
+        { label: "대표 영상 보기", href: site.koreaTimeslip, external: true },
+        { label: "제작 노트 보기", href: "lab-notes/" }
+      ]
     },
     {
       title: "GMI",
-      label: "시네마틱 케이스 파일",
-      summary: "글로벌 시네마틱 미스터리 / 이상현상 케이스 파일 프로젝트입니다."
+      label: "시네마틱 케이스 파일 / 제작 중",
+      summary: "글로벌 시네마틱 미스터리 / 이상현상 케이스 파일 프로젝트입니다.",
+      actions: [
+        { label: "제작 노트 보기", href: "lab-notes/" }
+      ]
     }
   ],
   en: [
@@ -105,17 +116,27 @@ const projects = {
       title: "S&J Studio Lab",
       label: "Public Lab",
       summary: "Public notes and templates from AI production experiments.",
-      href: "https://github.com/snj-studio-lab/snj-ai-production-lab"
+      actions: [
+        { label: "Read Lab Notes", href: "lab-notes/" },
+        { label: "View GitHub", href: site.github, external: true }
+      ]
     },
     {
       title: "Korea Time-Slip HQ",
-      label: "Series Lab",
-      summary: "Korean alternate-history time-slip military drama series."
+      label: "Published Channel",
+      summary: "A Korean-history-based alternate-history time-slip military drama series.",
+      actions: [
+        { label: "View Channel", href: site.koreaTimeslip, external: true },
+        { label: "Read Production Notes", href: "lab-notes/" }
+      ]
     },
     {
       title: "GMI",
-      label: "Case Files",
-      summary: "Global cinematic anomaly case files."
+      label: "Case Files / In Production",
+      summary: "Global cinematic mystery and anomaly case files.",
+      actions: [
+        { label: "Read Production Notes", href: "lab-notes/" }
+      ]
     }
   ]
 };
@@ -306,17 +327,23 @@ function entryCards(entries, locale, depth = 0) {
   `).join("");
 }
 
-function projectCards(locale) {
+function projectActionLink(action, depth) {
+  const href = action.external ? action.href : withBase(depth, action.href);
+  const target = action.external ? ' target="_blank" rel="noreferrer"' : "";
+  return `<a class="project-action" href="${escapeHtml(href)}"${target}>${escapeHtml(action.label)}</a>`;
+}
+
+function projectCards(locale, depth = 0) {
   return projects[locale].map((project) => {
-    const content = `
-      <span>${escapeHtml(project.label)}</span>
+    return `
+    <article class="project-card">
+      <span class="project-label">${escapeHtml(project.label)}</span>
       <h2>${escapeHtml(project.title)}</h2>
       <p>${escapeHtml(project.summary)}</p>
-    `;
-    if (project.href) {
-      return `<a class="project-card project-card-link" href="${escapeHtml(project.href)}">${content}</a>`;
-    }
-    return `<article class="project-card">${content}</article>`;
+      <div class="project-actions">
+        ${(project.actions || []).map((action) => projectActionLink(action, depth)).join("")}
+      </div>
+    </article>`;
   }).join("");
 }
 
@@ -384,7 +411,7 @@ function homePage(locale, notes, templates) {
           <p class="eyebrow">${c.projects}</p>
           <h2>${c.projectsTitle}</h2>
         </div>
-        <div class="project-grid compact">${projectCards(locale)}</div>
+        <div class="project-grid compact">${projectCards(locale, depth)}</div>
       </section>
       <section class="section split-list">
         <div class="section-heading">
@@ -585,7 +612,7 @@ export async function build() {
         <h1>내부 IP를 과하게 노출하지 않고 공개 가능한 제작 신호만 정리합니다.</h1>
         <p>S&J Studio Lab이 만들고, 테스트하고, 공개 기록으로 남기는 프로젝트입니다.</p>
       </section>
-      <section class="project-grid">${projectCards("ko")}</section>
+      <section class="project-grid">${projectCards("ko", 1)}</section>
     `
   }));
 

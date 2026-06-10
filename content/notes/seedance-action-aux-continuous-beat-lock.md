@@ -1,13 +1,13 @@
 ---
-title_ko: "Seedance 16패널을 16컷처럼 실행하면 무너지는 이유"
-title_en: "Why 16-Panel Action Guides Should Not Become 16 Hard Cuts"
+title_ko: "스토리보드 패널은 컷리스트가 아니다"
+title_en: "Storyboard Panels Are Not Cut Lists"
 date: "2026-06-10"
 category: "Workflow Failure"
-summary_ko: "노량 해전 테스트 중 16패널 ACTION_AUX 가이드가 실제 16개의 물리 위상으로 생성되지 못하고, 이후 Seedance 실행 단계에서는 초단위 하드컷처럼 해석되며 리듬이 깨진 문제와, 이를 STEP8 v7.51 / APPENDIX B v7.4 Continuous Beat Lock으로 정리한 기록."
-summary_en: "A production note on a Seedance failure mode where a 16-panel action guide first failed to become 16 concrete physical states, then was interpreted as 16 rapid hard cuts, and how the workflow was corrected with a continuous beat execution lock."
+summary_ko: "노량 해전 테스트 중 16패널 액션 가이드가 실제 16개의 물리 위상으로 설계되지 못하고, 이후 영상 실행 단계에서 초단위 하드컷처럼 해석되며 리듬이 깨진 문제를 정리한 공개 제작 기록."
+summary_en: "A production note on a failure mode where a 16-panel action guide first failed to become 16 concrete physical states, then was interpreted as rapid hard cuts instead of continuous action beats."
 ---
 
-# Seedance 16패널을 16컷처럼 실행하면 무너지는 이유
+# 스토리보드 패널은 컷리스트가 아니다
 
 ## 요약
 
@@ -17,11 +17,11 @@ summary_en: "A production note on a Seedance failure mode where a 16-panel actio
 
 첫째, 스토리보드 프롬프트가 “16패널”을 요구했지만 실제로는 각 패널이 서로 다른 물리 위상을 충분히 갖지 못했다. 패널 수는 맞아도 내용이 `start state`, `progression`, `reaction`, `payoff` 같은 템플릿 문장으로 반복되면 16패널은 16개의 장면 설계가 아니라 16칸짜리 빈 양식이 된다.
 
-둘째, 그 16패널을 Seedance 실행 프롬프트에서 거의 16개의 짧은 컷처럼 강제했다.
+둘째, 그 16패널을 영상 실행 프롬프트에서 거의 16개의 짧은 컷처럼 강제했다.
 
 그 결과 영상은 장면을 이해하기 전에 다음 화면으로 넘어가는 식으로 급하게 흔들렸다. 개별 이미지는 나쁘지 않았지만, 전체 영상은 전투의 흐름이 아니라 빠르게 넘어가는 샘플러처럼 보였다.
 
-이 발견 때문에 STEP8 지침은 `v7.51 ACTION_AUX Continuous Beat Lock`으로, APPENDIX B는 `v7.4 Continuous Beat Execution Lock`으로 교체되었다.
+이 발견 이후 실행 규칙은 16패널을 16개의 하드컷으로 쓰지 않고, 몇 개의 연속 동작 단위로 묶어 실행하는 방향으로 수정되었다.
 
 ## 실패한 구조
 
@@ -63,17 +63,28 @@ AI 영상 도구는 이런 문장을 보고 구체적인 전장 구조를 안정
 
 ```txt
 - 패널별 실제 물리 변화가 있는가
-- 모든 패널이 Seedance에서 Guide:@Image1 P#로 커버되는가
-- prompt-only group을 가짜 @REF처럼 호출하지 않았는가
+- 모든 패널이 실행 프롬프트에서 실제로 참조되는가
+- 텍스트로만 설명한 임시 그룹을 실제 레퍼런스처럼 호출하지 않았는가
 - hard-surface reference가 필요한 장면에 실제 기준 이미지가 있는가
 - 배경 인물이 frozen extra처럼 서 있지 않고 task를 갖는가
 - 지휘관 얼굴/복식이 배경 인물에게 복제되지 않는가
 - 조선군/일본군 복식과 위치가 섞이지 않는가
 ```
 
-즉, 이번 문제는 단순히 Seedance 프롬프트 한 줄의 문제가 아니었다.
+즉, 이번 문제는 단순히 영상 프롬프트 한 줄의 문제가 아니었다.
 
-스토리보드, reference discipline, background task, faction split, Seedance execution이 모두 이어지는 구조 문제였다.
+스토리보드, reference discipline, background task, faction split, video execution이 모두 이어지는 구조 문제였다.
+
+## 내부 용어를 공개용으로 풀어 쓰면
+
+이 기록은 실제 제작 지침을 그대로 공개하는 문서가 아니다. 내부에서는 더 짧고 기계적인 표기를 쓰지만, 공개본에서는 다음처럼 이해하면 된다.
+
+```txt
+ACTION_AUX = 복잡한 액션 장면을 돕는 보조 스토리보드/동작 가이드
+패널 참조 = 최종 영상 프롬프트가 어느 스토리보드 패널을 따라야 하는지 지정하는 규칙
+REF = 캐릭터, 함선, 장비처럼 이미지 기준이 필요한 레퍼런스 자산
+Continuous Beat = 여러 패널을 끊어진 컷이 아니라 하나의 연속 동작으로 묶는 실행 단위
+```
 
 ## 16패널은 버릴 것이 아니라 다르게 써야 한다
 
@@ -96,7 +107,7 @@ AI 영상 도구는 이런 문장을 보고 구체적인 전장 구조를 안정
 
 ```txt
 16P storyboard = P1~P16을 구체적인 물리 위상으로 설계한다.
-Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
+Video execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 ```
 
 즉, 패널은 hidden choreography guide이고, 최종 영상은 연속적인 풀스크린 시네마틱 액션이어야 한다.
@@ -114,7 +125,7 @@ Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 
 허용:
 - P1~P16은 반드시 구체적으로 설계
-- Seedance 실행에서는 P1-P4 / P5-P8처럼 연속 BEAT로 묶기
+- 영상 실행에서는 P1-P4 / P5-P8처럼 연속 BEAT로 묶기
 - 각 BEAT 안에 포함된 실제 동작 순서를 명시
 - 최종 영상은 grid, panel, label, caption 없이 풀스크린으로 출력
 ```
@@ -132,7 +143,7 @@ Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 ```txt
 하지 않는 것:
 - 전체 에피소드 재작성
-- 전체 STEP8 엑셀 재생성
+- 전체 실행 시트 재생성
 - 대사 변경
 - 컷 순서 변경
 - 화력 보상 축소
@@ -145,13 +156,13 @@ Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 - frozen background extra 위험 확인
 - panel-guide mismatch 확인
 - storyboard prompt 수리
-- Seedance prompt 수리
+- video execution prompt 수리
 - 짧은 patch note 작성
 ```
 
 이 방식은 느려 보이지만, 실제로는 더 안전하다.
 
-생성 실패는 보통 한 줄 때문에 생기지 않는다. 한 클립 안에서 `@REF`, 패널, 배경 인물, 세력 구분, 카메라, 실행 시간, 다음 클립 연결이 함께 꼬인다. 그래서 전체 문서를 다시 생성하면 새 문제가 생기기 쉽다.
+생성 실패는 보통 한 줄 때문에 생기지 않는다. 한 클립 안에서 레퍼런스 자산, 패널, 배경 인물, 세력 구분, 카메라, 실행 시간, 다음 클립 연결이 함께 꼬인다. 그래서 전체 문서를 다시 생성하면 새 문제가 생기기 쉽다.
 
 노량 테스트에서는 클립 단위로 실패를 잡고, 반복되는 실패 패턴만 공통 지침으로 승격하는 쪽이 더 안정적이었다.
 
@@ -161,11 +172,11 @@ Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 
 배경 인물이 멀뚱히 서 있거나, 지휘관 얼굴이 배경 병사에게 복제되거나, 조선군과 일본군의 복식이 뒤섞이는 현상이 있었다.
 
-그래서 STEP8과 APPENDIX B에는 다음 기준도 함께 강화되었다.
+그래서 이후 대규모 전투 장면을 만들 때는 다음 기준도 함께 강화했다.
 
 ```txt
 - hard-surface reference를 1~3개 명확히 선택
-- prompt-only group은 @REF처럼 호출하지 않고 prose로 설명
+- prompt-only group은 실제 레퍼런스처럼 호출하지 않고 문장으로 설명
 - 세력별 복식과 위치를 분리
 - 배경 인물은 rowing, reloading, bracing, signaling, hauling rope 같은 실제 task를 가져야 함
 - 지휘관과 배경 인물 얼굴/복식 복제 금지
@@ -195,14 +206,14 @@ Seedance execution = P1~P16을 4~5개의 continuous beat로 묶어 실행한다.
 
 ## 현재 작업 방식
 
-노량 편은 아직 개별 클립 단위로 수동 수정 중이다. 전체 STEP8 엑셀을 한 번에 갈아엎는 방식은 위험하다.
+노량 편은 아직 개별 클립 단위로 수동 수정 중이다. 전체 실행 시트를 한 번에 갈아엎는 방식은 위험하다.
 
 현재 더 안전한 방식은 다음과 같다.
 
 ```txt
 1. 원본 산출물은 보존한다.
 2. 문제가 드러난 클립만 하나씩 본다.
-3. 스토리보드 프롬프트와 Seedance 실행 프롬프트를 함께 수리한다.
+3. 스토리보드 프롬프트와 영상 실행 프롬프트를 함께 수리한다.
 4. 실제 생성 결과를 보고 다음 클립으로 넘어간다.
 5. 반복되는 실패 패턴만 공통 지침으로 승격한다.
 ```
