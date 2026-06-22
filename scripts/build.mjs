@@ -26,7 +26,7 @@ const navLabels = {
   en: [
     ["Home", "en/"],
     ["About", "en/about/"],
-    ["Lab Notes", "lab-notes/"],
+    ["Lab Notes", "en/lab-notes/"],
     ["Templates", "templates/"],
     ["Projects", "projects/"],
     ["Contact", "contact/"]
@@ -117,7 +117,7 @@ const projects = {
       label: "Public Lab",
       summary: "Public notes and templates from AI production experiments.",
       actions: [
-        { label: "Read Lab Notes", href: "lab-notes/" },
+        { label: "Read Lab Notes", href: "en/lab-notes/" },
         { label: "View GitHub", href: site.github, external: true }
       ]
     },
@@ -127,7 +127,7 @@ const projects = {
       summary: "A Korean-history-based alternate-history time-slip military drama series.",
       actions: [
         { label: "View Channel", href: site.koreaTimeslip, external: true },
-        { label: "Read Production Notes", href: "lab-notes/" }
+        { label: "Read Production Notes", href: "en/lab-notes/" }
       ]
     },
     {
@@ -135,7 +135,7 @@ const projects = {
       label: "Case Files / In Production",
       summary: "Global cinematic mystery and anomaly case files.",
       actions: [
-        { label: "Read Production Notes", href: "lab-notes/" }
+        { label: "Read Production Notes", href: "en/lab-notes/" }
       ]
     }
   ]
@@ -158,6 +158,7 @@ function slugFromFile(file) {
 
 async function readCollection(collection) {
   const dir = path.join(root, "content", collection);
+  if (!existsSync(dir)) return [];
   const files = (await readdir(dir)).filter((file) => file.endsWith(".md"));
   const entries = [];
   for (const file of files) {
@@ -167,7 +168,15 @@ async function readCollection(collection) {
       ...data,
       body,
       slug: slugFromFile(file),
-      section: collection === "notes" ? "lab-notes" : "templates"
+      section: collection === "notes"
+        ? "lab-notes"
+        : collection === "notes-en"
+          ? "en/lab-notes"
+        : collection === "drafts"
+          ? "drafts"
+          : collection === "drafts-en"
+            ? "en/drafts"
+            : "templates"
     });
   }
   return entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -265,15 +274,15 @@ function withBase(depth, route) {
   return `${"../".repeat(depth)}${route}`;
 }
 
-function langToggle(locale, depth) {
+function langToggle(locale, depth, alternateHref) {
   const base = "../".repeat(depth);
   if (locale === "ko") {
-    return `<div class="language-toggle" aria-label="Language"><strong>KR</strong><a href="${base}en/">EN</a></div>`;
+    return `<div class="language-toggle" aria-label="Language"><strong>KR</strong><a href="${alternateHref || `${base}en/`}">EN</a></div>`;
   }
-  return `<div class="language-toggle" aria-label="Language"><a href="${base}">KR</a><strong>EN</strong></div>`;
+  return `<div class="language-toggle" aria-label="Language"><a href="${alternateHref || base}">KR</a><strong>EN</strong></div>`;
 }
 
-function pageShell({ title, description, active = "", body, depth = 0, locale = "ko" }) {
+function pageShell({ title, description, active = "", body, depth = 0, locale = "ko", alternateHref }) {
   const base = "../".repeat(depth);
   const navHtml = navLabels[locale].map(([label, href]) => {
     const activeClass = active === label || active === href ? " aria-current=\"page\"" : "";
@@ -296,7 +305,7 @@ function pageShell({ title, description, active = "", body, depth = 0, locale = 
       </a>
       <div class="header-actions">
         <nav class="nav" aria-label="Primary navigation">${navHtml}</nav>
-        ${langToggle(locale, depth)}
+        ${langToggle(locale, depth, alternateHref)}
       </div>
     </header>
     <main>${body}</main>
@@ -374,6 +383,7 @@ function homePage(locale, notes, templates) {
   const c = copy[locale];
   const depth = locale === "en" ? 1 : 0;
   const assetBase = locale === "en" ? "../" : "";
+  const notesRoute = locale === "en" ? "en/lab-notes/" : "lab-notes/";
   return pageShell({
     title: locale === "ko" ? "홈" : "Home",
     active: locale === "ko" ? "홈" : "Home",
@@ -387,7 +397,7 @@ function homePage(locale, notes, templates) {
           <p class="hero-subcopy">${c.heroCopy}</p>
           <p class="hero-secondary">${c.heroSecondary}</p>
           <div class="hero-actions">
-            <a class="button primary" href="${withBase(depth, "lab-notes/")}">${c.ctas[0]}</a>
+            <a class="button primary" href="${withBase(depth, notesRoute)}">${c.ctas[0]}</a>
             <a class="button" href="${withBase(depth, "templates/")}">${c.ctas[1]}</a>
             <a class="button ghost" href="${site.github}">${c.ctas[2]}</a>
           </div>
@@ -417,7 +427,7 @@ function homePage(locale, notes, templates) {
         <div class="section-heading">
           <p class="eyebrow">${c.notes}</p>
           <h2>${c.notesTitle}</h2>
-          <a href="${withBase(depth, "lab-notes/")}">${c.allNotes}</a>
+          <a href="${withBase(depth, notesRoute)}">${c.allNotes}</a>
         </div>
         <div class="entry-list">${entryCards(notes.slice(0, 3), locale, depth)}</div>
       </section>
@@ -462,14 +472,17 @@ async function copyPublic() {
   await copyFile(path.join(publicDir, "assets", "shua-avatar.png"), path.join(dist, "assets", "shua-avatar.png"));
 }
 
-export async function build() {
+export async function build({ includeDrafts = false } = {}) {
   const notes = await readCollection("notes");
+  const notesEn = await readCollection("notes-en");
   const templates = await readCollection("templates");
+  const drafts = includeDrafts ? await readCollection("drafts") : [];
+  const draftsEn = includeDrafts ? await readCollection("drafts-en") : [];
   await rm(dist, { recursive: true, force: true });
   await copyPublic();
 
   await writePage("", homePage("ko", notes, templates));
-  await writePage("en", homePage("en", notes, templates));
+  await writePage("en", homePage("en", notesEn, templates));
 
   await writePage("en/about", pageShell({
     title: "About",
@@ -536,6 +549,7 @@ export async function build() {
     active: "Lab Notes",
     depth: 1,
     locale: "ko",
+    alternateHref: "../en/lab-notes/",
     body: `
       <section class="page-title">
         <p class="eyebrow">Lab Notes</p>
@@ -547,11 +561,13 @@ export async function build() {
   }));
 
   for (const note of notes) {
+    const hasEnglishVersion = notesEn.some((entry) => entry.slug === note.slug);
     await writePage(`lab-notes/${note.slug}`, pageShell({
       title: entryTitle(note, "ko"),
       active: "Lab Notes",
       depth: 2,
       locale: "ko",
+      alternateHref: hasEnglishVersion ? `../../en/lab-notes/${note.slug}/` : undefined,
       description: entrySummary(note, "ko"),
       body: `
         <article class="prose article">
@@ -564,6 +580,123 @@ export async function build() {
         </article>
       `
     }));
+  }
+
+  await writePage("en/lab-notes", pageShell({
+    title: "Lab Notes",
+    active: "Lab Notes",
+    depth: 2,
+    locale: "en",
+    alternateHref: "../../lab-notes/",
+    body: `
+      <section class="page-title">
+        <p class="eyebrow">Lab Notes</p>
+        <h1>Failures, revisions, and repeatable knowledge from AI video production.</h1>
+        <p>Public notes derived from real production attempts and edited for safe reuse.</p>
+      </section>
+      <section class="entry-list wide">${entryCards(notesEn, "en", 2)}</section>
+    `
+  }));
+
+  for (const note of notesEn) {
+    await writePage(`en/lab-notes/${note.slug}`, pageShell({
+      title: entryTitle(note, "en"),
+      active: "Lab Notes",
+      depth: 3,
+      locale: "en",
+      alternateHref: `../../../lab-notes/${note.slug}/`,
+      description: entrySummary(note, "en"),
+      body: `
+        <article class="prose article">
+          <a class="back-link" href="../">Back to Lab Notes</a>
+          <div class="entry-meta">
+            <span>${escapeHtml(note.category)}</span>
+            <time datetime="${escapeHtml(note.date)}">${escapeHtml(note.date)}</time>
+          </div>
+          ${markdownToHtml(note.body)}
+        </article>
+      `
+    }));
+  }
+
+  if (includeDrafts) {
+    await writePage("drafts", pageShell({
+      title: "Local Draft Preview",
+      depth: 1,
+      locale: "ko",
+      alternateHref: "../en/drafts/",
+      body: `
+        <section class="page-title">
+          <p class="eyebrow">Local Preview Only</p>
+          <h1>미게시 공개 초안</h1>
+          <p>이 페이지와 아래 문서는 로컬 검토용이며 공개 빌드에는 포함되지 않습니다.</p>
+        </section>
+        <section class="entry-list wide">${entryCards(drafts, "ko", 1)}</section>
+      `
+    }));
+
+    for (const draft of drafts) {
+      await writePage(`drafts/${draft.slug}`, pageShell({
+        title: entryTitle(draft, "ko"),
+        depth: 2,
+        locale: "ko",
+        alternateHref: `../../en/drafts/${draft.slug}/`,
+        description: entrySummary(draft, "ko"),
+        body: `
+          <article class="prose article">
+            <div class="draft-banner">
+              <strong>LOCAL UNPUBLISHED DRAFT</strong>
+              <span>사용자 검토 전에는 공개 빌드에 포함되지 않습니다.</span>
+            </div>
+            <a class="back-link" href="../">미게시 초안 목록으로 돌아가기</a>
+            <div class="entry-meta">
+              <span>${escapeHtml(draft.category || "Draft")}</span>
+              <time datetime="${escapeHtml(draft.date || "")}">${escapeHtml(draft.date || "")}</time>
+            </div>
+            ${markdownToHtml(draft.body)}
+          </article>
+        `
+      }));
+    }
+
+    await writePage("en/drafts", pageShell({
+      title: "Local Draft Preview",
+      depth: 2,
+      locale: "en",
+      alternateHref: "../../drafts/",
+      body: `
+        <section class="page-title">
+          <p class="eyebrow">Local Preview Only</p>
+          <h1>Unpublished Article Drafts</h1>
+          <p>This index and the articles below are available for local review only. They are excluded from the public build.</p>
+        </section>
+        <section class="entry-list wide">${entryCards(draftsEn, "en", 2)}</section>
+      `
+    }));
+
+    for (const draft of draftsEn) {
+      await writePage(`en/drafts/${draft.slug}`, pageShell({
+        title: entryTitle(draft, "en"),
+        depth: 3,
+        locale: "en",
+        alternateHref: `../../../drafts/${draft.slug}/`,
+        description: entrySummary(draft, "en"),
+        body: `
+          <article class="prose article">
+            <div class="draft-banner">
+              <strong>LOCAL UNPUBLISHED DRAFT</strong>
+              <span>This article is excluded from the public build until editorial approval.</span>
+            </div>
+            <a class="back-link" href="../">Back to unpublished drafts</a>
+            <div class="entry-meta">
+              <span>${escapeHtml(draft.category || "Draft")}</span>
+              <time datetime="${escapeHtml(draft.date || "")}">${escapeHtml(draft.date || "")}</time>
+            </div>
+            ${markdownToHtml(draft.body)}
+          </article>
+        `
+      }));
+    }
   }
 
   await writePage("templates", pageShell({

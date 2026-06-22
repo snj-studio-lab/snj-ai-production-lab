@@ -802,6 +802,25 @@ h3 {
   margin-bottom: 22px;
 }
 
+.draft-banner {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 28px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: rgba(121,255,201,0.08);
+}
+
+.draft-banner strong {
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.draft-banner span {
+  color: var(--muted);
+}
+
 .contact-panel {
   display: grid;
   gap: 10px;

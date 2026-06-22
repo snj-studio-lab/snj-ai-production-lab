@@ -26,7 +26,7 @@ function resolveRequest(url) {
   return path.join(dist, safePath);
 }
 
-await build();
+await build({ includeDrafts: true });
 
 createServer(async (request, response) => {
   try {
