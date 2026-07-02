@@ -31,14 +31,12 @@ Without these answers, model selection becomes guesswork. With them, the goal ch
 
 ## A scene-requirement routing table
 
-| Scene requirement | Constraint to check first | Common failure sign |
-| --- | --- | --- |
-| Recurring character | Face, hair, costume, and color stability | The character looks like a different person in each cut |
-| Speech or singing | Lip-sync, expression, and timing | The mouth moves, but the performance feels dead |
-| Action shot | Motion continuity, camera axis, body structure | Limbs distort or direction changes unexpectedly |
-| Long-form beat | Clip-splitting strategy and shot continuity | Identity or space collapses in the second half |
-| Music-led edit | Beat-level shot design and rhythm control | The image is attractive but has no usable edit point |
-| Likeness-sensitive scene | Policy, rights, and publication safety | The result cannot safely be published |
+- **Recurring character**: Check face, hair, costume, and color stability first. If this fails, the character looks like a different person in each cut.
+- **Speech or singing**: Check lip-sync, expression, and timing first. If this fails, the mouth moves but the performance feels dead.
+- **Action shot**: Check motion continuity, camera axis, and body structure first. If this fails, limbs distort or direction changes unexpectedly.
+- **Long-form beat**: Check the clip-splitting strategy and shot continuity first. If this fails, identity or space collapses in the second half.
+- **Music-led edit**: Check beat-level shot design and rhythm control first. If this fails, the image is attractive but has no usable edit point.
+- **Likeness-sensitive scene**: Check policy, rights, and publication safety first. If this fails, the result cannot safely be published.
 
 The point of the table is not to rank models. It is to sort scenes by failure mode. If one model is assumed to satisfy every requirement at once, review becomes dangerously loose.
 
