@@ -3,213 +3,180 @@ title_ko: "GPT와 협업의 문제점: 오류가 목표를 대체할 때"
 title_en: "The GPT Collaboration Problem: When the Fix Replaces the Goal"
 date: "2026-07-17"
 category: "Production System"
-summary_ko: "여러 개의 독립 작업에서 GPT가 같은 방식으로 제작 목표를 잃고, 오류 수정 자체를 목표로 바꿔버리는 현상을 정리한 제작 노트."
-summary_en: "A production note on a GPT-specific collaboration failure: when the assistant fixates on a local error and lets the repair loop replace the production goal."
+summary_ko: "GPT와 장기 작업을 할 때 오류 지점에 주의가 고정되면서 원래 제작 목표가 밀려나는 현상을 정리한 제작 노트."
+summary_en: "A production note on a GPT-specific collaboration failure: when attention locks onto a local error and the repair loop replaces the production goal."
 status: "published"
 ---
 
 # The GPT Collaboration Problem: When the Fix Replaces the Goal
 
-This is not a note about AI collaboration in general. It is a note about a specific failure pattern observed while working with GPT across multiple production tasks.
+When working with GPT on a long production task, a strange moment can arrive. At first, the assistant appears to follow the user's goal. If the goal, stopping condition, and protected files are written down, GPT may follow them for a while.
 
-Other tools have their own weaknesses. The problem described here is more specific: when a GPT conversation becomes long, and an error or inconsistency appears, GPT can stop holding the production goal and begin orbiting the error itself. The repair loop becomes more important than the thing the creator was trying to make.
+Then an error appears.
 
-This did not appear in one isolated task. It appeared across separate channels, separate content packages, and separate workstreams around the same period. The issue was not that there was too much work.
+Once that happens, the center of gravity can shift. GPT may become more attached to the error than to the output that was supposed to be created. The task changes from “finish the deliverable” to “explain and repair the error structure.”
 
-The issue was this:
+The creator called GPT to make a video, clean up a note, generate images, or prepare an executable prompt. But as the conversation grows, GPT may create new work: redefine the state, send the task upstream, write another request, create another audit, or propose another review pass.
 
-```text
-GPT did not fail because the creator had many tasks.
-It failed because, once an error appeared, the local repair loop began to replace the production goal.
-```
+The dangerous part is that this can look reasonable. The assistant sounds busy and structured. But the creator is not moving forward. They are orbiting the error GPT has locked onto.
 
-## Even a written goal may not keep the goal alive
+## A written goal is necessary, but not enough
 
-When working with GPT for a long time, creators often learn to write the goal down. They do this because, as the conversation grows, GPT may blur the original purpose of the work.
+For long GPT work, writing the goal down is necessary. GPT can lose the original frame as the conversation grows.
 
-So the goal is documented:
+A production note may define:
 
-- what is being made;
-- what output is required;
-- where the work should stop;
-- which files or documents must not be touched;
-- what the creator needs to finish now.
+- the output being made;
+- the stopping condition for the current step;
+- files that must not be touched;
+- points requiring user approval;
+- the minimum output needed to continue.
 
-The problem is that a written goal is not always enough. GPT may follow it while the task is smooth. But once an error appears, its attention can narrow sharply.
+But a written goal does not guarantee that the goal remains alive. GPT may follow it while the task is smooth, then build a new work structure around the first visible error.
 
-At that point, GPT may:
+The creator wants the needed output so the next production step can begin. GPT may instead focus on explaining the error, reconciling state, and making the repair structure feel complete.
 
-- build a new explanation around the error;
-- suggest upstream review to repair the error;
-- create new request documents, audits, or status reports;
-- prioritize procedural consistency over the intended output;
-- and push the creator's actual production time further away.
+That difference is small in language and large in production time.
 
-In other words, even when the goal is written down, GPT can become more attached to explaining and repairing the local error than to remembering what was being produced.
+## An error can become the new goal
 
-## The same pattern appeared across separate workstreams
+The most dangerous moment in GPT collaboration often comes right after a defect is found.
 
-This matters because it was not a one-off mistake.
+Defects need repair. But not every defect has the same weight. Some require only one file to be fixed. Some require one prompt line to change. Some can be recorded as risk while the work continues. Others truly require upstream repair.
 
-Several different tasks were running at the same time. They belonged to different content areas, different work windows, and different outputs. Yet they failed in a similar pattern.
+GPT often overestimates the repair layer.
 
-The pattern looked like this:
+A small defect appears, and GPT may start to:
 
-- GPT appears to follow the user's request at first.
-- A small defect or inconsistency appears.
-- GPT fixates on that defect.
-- Repairing the defect becomes more important than the higher-level goal.
-- Documents and procedures multiply while the deliverable moves further away.
-- The creator ends up asking, “When am I supposed to do the actual work?”
+- reopen an earlier ledger;
+- re-audit the whole package;
+- re-project downstream documents;
+- align status fields before producing the needed output;
+- delay the user's actual next production action.
 
-The issue is not parallel work itself. A creator can run multiple projects. The issue is GPT's tendency to lose the final goal and generate a new local goal around the visible error.
+At that point, the creator is moving away from the deliverable. What was needed may have been a few executable prompts, a few images, or a short corrected note. GPT builds a procedure around it.
 
-## GPT is very good at building plausible repair structures
+The fix becomes the goal.
 
-The danger is not that GPT always produces obviously absurd answers. Often, it produces a repair structure that sounds reasonable.
+## GPT is good at making detours sound reasonable
 
-For example, the real need may be to generate a small set of image prompts so production can continue. GPT may instead expand the problem into upstream ledger repair, reference-state correction, package regeneration, downstream projection, and another review pass.
+If GPT gives a completely absurd answer, the problem is easy to see. The harder problem is that GPT can build a very plausible detour.
 
-Each sentence may sound defensible. But from the creator's perspective, the target has changed.
+Suppose the immediate need is seven image prompts. The creator needs those prompts so image work can start. GPT may instead say that an upstream asset ledger should be repaired first, that the reference state needs correction, that downstream documents should be updated, and that another review request should be created.
+
+Some of that may be true eventually. The ledger may need cleanup. The state may need correction. A regression-prevention rule may be useful.
+
+But that may not be what is needed now.
+
+In production, order matters.
 
 ```text
-Original goal:
-Create the assets needed today and move to the next production step.
-
-New goal created by GPT:
-Reconcile the administrative state between upstream and downstream documents.
+Create the needed executable output first.
+Then clean up the state document.
+Then update the prevention rule.
 ```
 
-That shift is costly. The creator asked GPT to support production, not to create a new administrative system that must itself be managed.
+When that order is reversed, the creator has to process GPT's procedure before they can return to the actual work.
 
-## The moment correction becomes the goal
+## Candidate sources are not finished assets
 
-The most dangerous moment in GPT collaboration often begins with the word “fix.”
+One common place where GPT loses the production goal is asset state.
 
-Some fixes support production. Others stop it.
+A candidate source is raw material. It might be a reference image with several people, an unapproved draft, or a source that can later be cropped or separated. It can be useful, but it is not automatically a finished production reference.
 
-A production-supporting fix is small:
-
-- correct the wrong title;
-- add one missing file;
-- repair a bad reference description;
-- extract only the executable prompt;
-- produce the asset needed now.
-
-A production-stopping fix keeps moving upward:
-
-- reopen an earlier stage;
-- regenerate a whole package;
-- repair a ledger before producing the needed output;
-- postpone the user's actual production step;
-- make the repair procedure larger than the defect.
-
-GPT may describe this as the safe approach. But for a creator with a deadline, safety is not endless upstream recursion. Safety is the smallest repair that allows production to continue without corrupting the result.
-
-## Candidate sources and finished assets must not be mixed
-
-One repeated issue in the source case was GPT's tendency to blur candidate material and production-ready assets.
-
-A candidate source is raw material. It may help select a face, object, style, or reference direction. But it is not automatically a finished production asset.
-
-A safer state chain looks like this:
+The state chain should remain separate.
 
 ```text
 candidate source
 → materialized reference
-→ visual approval
-→ usable production reference
+→ user visual approval
+→ usable production asset
 ```
 
-If GPT collapses these states, it may mark an item as approved even though no independent usable file exists. It may let several roles depend on one shared source image. Downstream steps then inherit the upstream mistake.
+If GPT collapses these states, it may mark something as approved before an independent usable file exists. It may also let several roles depend on one shared reference source. Downstream steps then inherit the bad state.
 
-This is not just a documentation issue. In production, it can break character identity, role separation, and visual continuity.
+The creator may only notice later, when the output feels wrong. The prompt was not the only problem. GPT had treated a candidate as if it were a finished asset.
 
-## Prompts should not become administrative documents
+## Execution prompts should not contain administrative text
 
-An executable prompt should contain instructions the model can actually use.
+GPT likes structured documents. That means it may put approval status, step numbers, review notes, or internal explanations into a prompt.
 
-It should not contain:
+But an execution prompt must be executable. It should contain the visual or behavioral instructions the model can actually use.
 
-- approval status;
+It should not include:
+
+- internal approval status;
 - package versions;
 - step numbers;
 - file-transfer instructions;
 - review notes;
-- administrative explanations from earlier conversations.
+- administrative explanations from earlier conversation.
 
-GPT can blur this boundary. It may produce text that looks structured but is not cleanly executable.
+Those belong in status documents. If they enter the prompt, the operator has to interpret them again, and the model receives irrelevant information.
 
-So every prompt should be checked with one question:
-
-```text
-Is this a prompt I can copy and run,
-or is it a management document with prompt-like pieces inside it?
-```
-
-If the user has to interpret internal metadata before running the prompt, the prompt is not finished.
-
-## Guardrails for working with GPT
-
-Long GPT collaborations need more than good instructions. They need operating guardrails that prevent goal drift.
-
-### 1. Keep the goal sentence short
-
-One sentence often works better than a long brief.
+Each prompt should be checked with one question:
 
 ```text
-The goal is to finish deliverable A.
-Repairs are allowed only if they help deliverable A get finished.
+Can I copy and run this directly,
+or is it a management document disguised as a prompt?
 ```
 
-When GPT starts expanding the procedure, bring it back to that sentence.
+## Locking questions for GPT collaboration
 
-### 2. Classify the repair layer first
-
-When an error appears, do not immediately let GPT send the task upstream. Classify the repair first.
-
-- Can the current output be fixed directly?
-- Does only the current file need repair?
-- Does an upstream ledger actually need correction?
-- Does the whole pipeline need rerun?
-- Can the risk be recorded while production continues?
-
-Without this classification, GPT may design a larger repair than the problem requires.
-
-### 3. Separate execution from management
-
-Prompts should be executable. Management information belongs in status fields, notes, or tracking documents.
-
-If GPT mixes them, ask for a clean version:
-
-```text
-Remove administrative metadata.
-Return only the copy-and-run prompt.
-```
-
-### 4. Ask for the minimum production output first
-
-When GPT proposes upstream repair, ask:
-
-```text
-What is the minimum output needed right now so production can continue?
-Create that first.
-```
-
-If the needed output is seven image prompts, the seven prompts should come first. Ledger correction and instruction cleanup can follow.
-
-## Conclusion
-
-The core risk in GPT collaboration is not merely that GPT may be wrong. The deeper risk is that, after an error appears, GPT can lose the production goal and make the repair procedure the new goal.
-
-This is not a workload problem. The important observation is that the same failure pattern appeared across separate tasks. Even with written goals, GPT can become locally fixated when a conversation gets long and a defect appears.
-
-So the creator has to keep asking:
+When GPT starts building a new procedure around an error, the safest response is not a long debate. Use short locking questions.
 
 ```text
 What were we making?
-Is this repair necessary to finish that output today?
-Or are we now working on GPT's work instead of the production work?
 ```
 
-GPT can be a powerful collaborator. But without goal-locking guardrails, the creator may end up managing GPT's repair loop instead of finishing the deliverable.
+```text
+Is this fix necessary to finish that output today?
+```
+
+```text
+What is the minimum output needed now?
+```
+
+```text
+Can you create that output first?
+```
+
+If GPT cannot answer these questions, it may continue producing increasingly detailed explanations while production slows down.
+
+## Good GPT collaboration keeps small fixes small
+
+Good collaboration does not make every problem large. It keeps small problems small and treats only large problems as large.
+
+A production-saving fix usually looks like this:
+
+- if the title is wrong, fix the title;
+- if seven prompts are needed, create the seven prompts first;
+- if candidate and approved assets are mixed, separate the file needed now;
+- if upstream cleanup is useful but not urgent, schedule it after the output;
+- make the next action visible to the creator.
+
+A failing collaboration often looks like this:
+
+- find a small problem;
+- expand it into a structural problem;
+- create a new document;
+- add another review step;
+- push the original output further away.
+
+When this repeats, the creator is no longer collaborating with GPT. They are managing GPT's work loop.
+
+## Conclusion
+
+The core risk in GPT collaboration is not only that GPT may be wrong. The deeper risk is that, after an error appears, GPT can lose the production goal and make the repair procedure the new goal.
+
+This is especially damaging in long, multi-step, deadline-driven production work. The creator needs a result. GPT may begin treating the repair structure as more important than that result.
+
+So GPT collaboration needs goal-locking.
+
+```text
+What are we making?
+Is this repair necessary for that output?
+Or are we now working on GPT's procedure instead of the production work?
+```
+
+GPT can be a powerful collaborator. But without goal locks, the creator may end up maintaining GPT's repair loop instead of finishing the deliverable.
