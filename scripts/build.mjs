@@ -36,8 +36,8 @@ const copy = {
     description: "AI 영상 제작의 결과물뿐 아니라 실제 제작 과정에서 무너지고 복구되는 워크플로우를 기록하는 공개 제작 실험실입니다.",
     homeDescription: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 비롯한 S&J Studio의 시네마틱 작품과 제작 기록을 만나보세요.",
     heroEyebrow: "S&J Studio",
-    heroTitle: "역사에서 새로운 세계까지,<br>이야기를 영화로 만듭니다.",
-    heroCopy: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 비롯한 S&J Studio의 시네마틱 작품과 제작 기록을 만나보세요.",
+    heroTitle: "시대와 세계를 넘나드는 이야기를,<br>영화로 만듭니다.",
+    heroCopy: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS의 오리지널 시네마틱 작품, 그리고 그 제작 과정을 기록하는 Studio Lab.",
     ctas: ["작품과 채널 보기", "Studio Lab"],
     filmsEyebrow: "Films & Channels",
     filmsTitle: "작품과 채널",
@@ -59,8 +59,8 @@ const copy = {
     description: "A public creator lab documenting the workflows, failures, and production systems behind AI-assisted cinematic video.",
     homeDescription: "Explore S&J Studio's films, channels, and the production notes behind them.",
     heroEyebrow: "S&J Studio",
-    heroTitle: "Cinematic stories across history, worlds and imagination.",
-    heroCopy: "Explore S&J Studio's films, channels, and the production notes behind them.",
+    heroTitle: "Stories across eras and worlds, made cinematic.",
+    heroCopy: "Original cinematic works from Korea Time-Slip HQ and SNJ ORIGINAL FILMS, with production notes from Studio Lab.",
     ctas: ["View Films & Channels", "Studio Lab"],
     filmsEyebrow: "",
     filmsTitle: "Films & Channels",
@@ -144,8 +144,8 @@ const channels = [
     image: "assets/korea-timeslip-channel-banner.webp",
     href: site.koreaTimeslip,
     summary: {
-      ko: "한국사를 바탕으로 한 대체역사 타임슬립 시네마틱",
-      en: "Cinematic alternate-history time-slip stories rooted in Korean history."
+      ko: "과거·현재·미래를 넘나드는 오리지널 타임슬립 액션",
+      en: "Original cinematic time-slip action across the past, present, and future."
     }
   },
   {
@@ -153,8 +153,8 @@ const channels = [
     image: "assets/snj-original-films-channel-banner.webp",
     href: site.snjOriginalFilms,
     summary: {
-      ko: "SF, 판타지, 미스터리와 새로운 세계를 담은 오리지널 시네마틱 필름",
-      en: "Original cinematic films across science fiction, fantasy, mystery, and new worlds."
+      ko: "SF · 판타지 · 액션을 넘나드는 오리지널 시네마틱 필름",
+      en: "Original cinematic films across science fiction, fantasy, and action."
     }
   }
 ];
