@@ -48,7 +48,7 @@ const copy = {
     templatesTitle: "아이디어를 제작으로 넘기기 전 확인하는 구조",
     creatorEyebrow: "About the Creator",
     creatorTitle: "실패를 공개 가능한 제작 지식으로 바꾸는 1인 제작자",
-    creatorBody: "Shua는 S&J Studio를 운영하며 AI 영상 제작 워크플로우를 실험하고 기록합니다. 20년 넘게 조직, 비용, 일정, 문서, 리스크를 다루는 실무 현장에서 일한 경험은 제작 과정을 시스템으로 바라보는 기반이 되었습니다.",
+    creatorBody: "20년 넘게 조직·비용·일정·문서·리스크를 다루는 실무 경험을 바탕으로, S&J Studio의 제작 과정을 하나의 운영 가능한 시스템으로 설계하고 있습니다.",
     creatorLink: "슈아 소개 보기",
     contactTitle: "협업, 컨설팅, 프로젝트 소개",
     contactBody: "AI 영상 제작, 공개 템플릿, 1인 스튜디오 워크플로우와 관련된 대화를 환영합니다.",
@@ -71,7 +71,7 @@ const copy = {
     templatesTitle: "Production checkpoints before an idea moves forward",
     creatorEyebrow: "About the Creator",
     creatorTitle: "Shua turns real production failures into public workflow knowledge.",
-    creatorBody: "A solo AI video creator and studio workflow designer building practical systems through real channel experiments.",
+    creatorBody: "Drawing on more than 20 years of hands-on operational experience, I build S&J Studio's production workflow as a system that can be directed, reviewed, and improved.",
     creatorLink: "Read about Shua",
     contactTitle: "Collaboration, consulting, or project introduction",
     contactBody: "Conversations around AI-assisted video production, public templates, and solo studio workflow design are welcome.",
@@ -509,7 +509,7 @@ function articlePage({ entry, locale, backLabel, list = [] }) {
 }
 
 function contactCards(locale) {
-  const labels = locale === "ko" ? ["공식 링크 준비 중"] : ["Official link coming soon"];
+  const timeslipName = locale === "ko" ? "대한 타임슬립 본부" : "Korea Time-Slip HQ";
   return `
       <section class="contact-panel">
         <div>
@@ -526,7 +526,8 @@ function contactCards(locale) {
         </div>
         <div>
           <span>YouTube</span>
-          <strong>${labels[0]}</strong>
+          <a href="${site.koreaTimeslip}" target="_blank" rel="noreferrer">${timeslipName}</a>
+          <a href="${site.snjOriginalFilms}" target="_blank" rel="noreferrer">SNJ ORIGINAL FILMS</a>
         </div>
       </section>`;
 }
@@ -685,24 +686,23 @@ export async function build({ includeDrafts = false } = {}) {
     body: `
       <section class="page-title two-column">
         <div>
-          <p class="eyebrow">About</p>
-          <h1>AI video workflows, documented from a production operations perspective.</h1>
-          <p>S&J Studio Lab is a public production notebook and personal brand homepage operated by Shua / S&J Studio.</p>
+          <p class="eyebrow">About · Shua / S&J Studio</p>
+          <h1>A creator-led studio making cinematic stories across eras and worlds.</h1>
+          <p>S&J Studio operates Korea Time-Slip HQ and SNJ ORIGINAL FILMS, handling research, story development, scene design, AI-assisted production, editing, and final review as one connected workflow.</p>
         </div>
         <img class="about-avatar" src="../../assets/shua-avatar.png" alt="Animated profile illustration of Shua">
       </section>
       <section class="prose narrow">
-        <h2>Why production systems matter</h2>
-        <p>Shua has worked for over 20 years in practical business operations involving organizations, cost, schedules, documentation, and risk. That background shapes how S&J Studio Lab approaches AI video: not only as creative output, but as a production system that connects planning, documentation, review, cost, and repeatability.</p>
-        <p>Since 2025, the lab has been documenting hands-on experiments in AI video production, YouTube channel operations, image and video generation research, subtitle cleanup, and upload packaging.</p>
-        <p>The site records not only finished work, but also the failures, revision criteria, and production notes gathered during real production attempts.</p>
-        <h2>What gets documented</h2>
-        <ul>
-          <li>AI-assisted video production workflows</li>
-          <li>Production failures and revision criteria</li>
-          <li>Templates for solo studio operations</li>
-          <li>Public notes from project experiments</li>
-        </ul>
+        <h2>From operations to production</h2>
+        <p>For more than 20 years, I worked in environments shaped by operations, budgets, schedules, documentation, and risk.</p>
+        <p>That experience now informs how S&J Studio approaches production: breaking complex work into controllable stages, documenting decisions, building repeatable workflows, and tracing failures back to their causes.</p>
+        <h2>Why AI filmmaking</h2>
+        <p>Since 2025, I have been producing AI-assisted video and operating YouTube channels directly.</p>
+        <p>AI is used as a production tool for creating visual and audiovisual elements, not as the author of the work.</p>
+        <p>S&J Studio remains responsible for what to make, which results to keep, how scenes are directed, and how the finished work comes together.</p>
+        <h2>Studio Lab</h2>
+        <p>Studio Lab does not only present finished work.</p>
+        <p>It documents real production failures, fixes, decision criteria, and reusable production notes from the work behind the films.</p>
       </section>
       ${aboutContact("en")}
     `
@@ -717,24 +717,23 @@ export async function build({ includeDrafts = false } = {}) {
     body: `
       <section class="page-title two-column">
         <div>
-          <p class="eyebrow">About</p>
-          <h1>AI 영상 워크플로우를 제작 운영의 관점에서 기록합니다.</h1>
-          <p>S&J Studio Lab은 Shua / S&J Studio가 운영하는 공개 제작 노트이자 개인 브랜드 홈페이지입니다.</p>
+          <p class="eyebrow">About · Shua / S&J Studio</p>
+          <h1>시대와 세계를 넘나드는 이야기를,<br>영화로 만드는 1인 크리에이터 스튜디오</h1>
+          <p>S&J Studio는 대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 운영하며, 기획과 조사부터 대본, 장면 설계, AI 생성 과정의 지시와 선택, 편집과 최종 검수까지 직접 수행합니다.</p>
         </div>
         <img class="about-avatar" src="../assets/shua-avatar.png" alt="슈아 애니메이션 프로필 이미지">
       </section>
       <section class="prose narrow">
-        <h2>제작을 시스템으로 바라보는 이유</h2>
-        <p>Shua는 20년 넘게 조직, 비용, 일정, 문서, 리스크를 다루는 실무 현장에서 일해 왔습니다. 그 경험은 AI 영상 제작을 단순한 창작이 아니라 기획, 문서화, 검수, 비용, 반복 가능성이 연결된 제작 운영의 문제로 바라보는 기반이 되었습니다.</p>
-        <p>2025년부터는 AI 영상 제작, 유튜브 채널 운영, 이미지와 영상 생성 연구, 자막 정리, 업로드 패키징을 직접 실험하며 1인 제작자가 마주하는 실패와 수정 과정을 기록하고 있습니다.</p>
-        <p>이곳에는 완성된 결과물만이 아니라 실제 제작 과정에서 얻은 실패, 수정 기준, 제작 노트를 함께 기록합니다.</p>
-        <h2>기록하는 것</h2>
-        <ul>
-          <li>AI 영상 제작 워크플로우</li>
-          <li>제작 실패와 수정 기준</li>
-          <li>1인 스튜디오 운영을 위한 템플릿</li>
-          <li>공개 가능한 프로젝트 실험 노트</li>
-        </ul>
+        <h2>운영에서 제작으로</h2>
+        <p>20년 넘게 조직, 비용, 일정, 문서와 리스크가 얽힌 실제 업무를 운영해왔습니다.</p>
+        <p>그 경험은 지금 S&J Studio의 제작 방식에 그대로 이어집니다. 복잡한 제작 과정을 작은 작업 단위로 나누고, 기준을 문서화하고, 반복 가능한 흐름으로 만들고, 문제가 생기면 원인을 추적해 다시 설계하는 방식입니다.</p>
+        <h2>왜 AI 영화 제작인가</h2>
+        <p>2025년부터 AI 영상 제작과 YouTube 채널 운영을 직접 시작했습니다.</p>
+        <p>AI는 창작의 주체가 아니라, 이미지와 영상 등 작품에 필요한 시청각 요소를 구현하는 제작 도구로 사용합니다.</p>
+        <p>무엇을 만들지 결정하고, 어떤 결과를 선택할지 판단하고, 작품 전체의 방향을 통제하는 일은 S&J Studio가 직접 수행합니다.</p>
+        <h2>Studio Lab</h2>
+        <p>Studio Lab은 완성본만 보여주는 공간이 아닙니다.</p>
+        <p>실제 제작 과정에서 생긴 실패, 수정, 판단 기준, 그리고 다시 사용할 수 있게 정리한 제작 노트를 공개합니다.</p>
       </section>
       ${aboutContact("ko")}
     `
