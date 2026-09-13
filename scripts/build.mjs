@@ -15,38 +15,35 @@ const site = {
   snjOriginalFilms: "https://www.youtube.com/@SNJOriginalFilms"
 };
 
+// [label, href, active keys]
 const navLabels = {
   ko: [
-    ["홈", ""],
-    ["소개", "about/"],
-    ["Lab Notes", "lab-notes/"],
-    ["Templates", "templates/"],
-    ["Projects", "projects/"],
-    ["Contact", "contact/"]
+    ["Films & Channels", "projects/", ["Projects"]],
+    ["Studio Lab", "lab-notes/", ["Lab Notes", "Templates"]],
+    ["About", "about/", ["소개"]],
+    ["Contact", "contact/", ["Contact"]]
   ],
   en: [
-    ["Home", "en/"],
-    ["About", "en/about/"],
-    ["Lab Notes", "en/lab-notes/"],
-    ["Templates", "en/templates/"],
-    ["Projects", "en/projects/"],
-    ["Contact", "en/contact/"]
+    ["Films & Channels", "en/projects/", ["Projects"]],
+    ["Studio Lab", "en/lab-notes/", ["Lab Notes", "Templates"]],
+    ["About", "en/about/", ["About"]],
+    ["Contact", "en/contact/", ["Contact"]]
   ]
 };
 
 const copy = {
   ko: {
     description: "AI 영상 제작의 결과물뿐 아니라 실제 제작 과정에서 무너지고 복구되는 워크플로우를 기록하는 공개 제작 실험실입니다.",
-    heroEyebrow: "AI 영상 제작 공개 실험실",
-    heroCopy: "AI 영상 제작의 결과물뿐 아니라 실제 제작 과정에서 무너지고 복구되는 워크플로우를 기록합니다.",
-    heroSecondary: "프롬프트 실패, 레퍼런스 제어, 자막 정리, 업로드 패키징까지 1인 제작자가 겪는 시행착오를 공개 가능한 제작 지식으로 바꿉니다.",
-    ctas: ["Lab Notes 보기", "Public Templates 보기", "GitHub 방문하기"],
-    whatTitle: "완성본보다 과정을 기록하는 제작 노트",
-    whatBody: "S&J Studio Lab은 AI 영상 제작을 단순한 프롬프트 문제가 아니라 기획, 정보, 이미지, 영상, 자막, 검수, 업로드가 연결된 제작 시스템 문제로 다룹니다.",
-    projects: "현재 프로젝트",
-    projectsTitle: "대표 작업과 공개 제작 기록",
-    notes: "최근 Lab Notes",
-    notesTitle: "실패, 수정, 반복 가능한 제작 지식",
+    homeDescription: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 비롯한 S&J Studio의 시네마틱 작품과 제작 기록을 만나보세요.",
+    heroEyebrow: "S&J Studio",
+    heroTitle: "역사에서 새로운 세계까지,<br>이야기를 영화로 만듭니다.",
+    heroCopy: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 비롯한 S&J Studio의 시네마틱 작품과 제작 기록을 만나보세요.",
+    ctas: ["작품과 채널 보기", "Studio Lab"],
+    filmsEyebrow: "Films & Channels",
+    filmsTitle: "작품과 채널",
+    notesEyebrow: "Inside S&J Studio",
+    notesTitle: "Production Notes",
+    notesBody: "완성본뿐 아니라 제작 과정에서 실제로 부딪힌 문제와 수정 과정을 공개 가능한 제작 지식으로 정리합니다.",
     templates: "공개 제작 템플릿",
     templatesTitle: "아이디어를 제작으로 넘기기 전 확인하는 구조",
     creatorEyebrow: "About the Creator",
@@ -60,16 +57,16 @@ const copy = {
   },
   en: {
     description: "A public creator lab documenting the workflows, failures, and production systems behind AI-assisted cinematic video.",
-    heroEyebrow: "AI cinematic production lab",
-    heroCopy: "A public creator lab documenting the workflows, failures, and production systems behind AI-assisted cinematic video.",
-    heroSecondary: "S&J Studio Lab documents real AI video production attempts: what broke, what changed, and what can be reused by other creators.",
-    ctas: ["Read the Lab Notes", "View Public Templates", "Visit GitHub"],
-    whatTitle: "A public notebook for production process, not only finished work.",
-    whatBody: "S&J Studio Lab treats AI video as a production system: planning, references, images, shots, subtitles, review, packaging, and upload decisions all have to work together.",
-    projects: "Current Projects",
-    projectsTitle: "Projects and proof of work",
-    notes: "Latest Lab Notes",
-    notesTitle: "Failures, revisions, and reusable workflow knowledge",
+    homeDescription: "Explore S&J Studio's films, channels, and the production notes behind them.",
+    heroEyebrow: "S&J Studio",
+    heroTitle: "Cinematic stories across history, worlds and imagination.",
+    heroCopy: "Explore S&J Studio's films, channels, and the production notes behind them.",
+    ctas: ["View Films & Channels", "Studio Lab"],
+    filmsEyebrow: "",
+    filmsTitle: "Films & Channels",
+    notesEyebrow: "Inside S&J Studio",
+    notesTitle: "Production Notes",
+    notesBody: "Notes on the real production decisions, failures, and fixes behind the work.",
     templates: "Public Templates",
     templatesTitle: "Production checkpoints before an idea moves forward",
     creatorEyebrow: "About the Creator",
@@ -139,6 +136,28 @@ const projects = {
     }
   ]
 };
+
+// Home Films & Channels. Banner artwork already carries each channel title.
+const channels = [
+  {
+    name: "대한 타임슬립 본부 | Korea Time-Slip HQ",
+    image: "assets/korea-timeslip-channel-banner.webp",
+    href: site.koreaTimeslip,
+    summary: {
+      ko: "한국사를 바탕으로 한 대체역사 타임슬립 시네마틱",
+      en: "Cinematic alternate-history time-slip stories rooted in Korean history."
+    }
+  },
+  {
+    name: "SNJ ORIGINAL FILMS",
+    image: "assets/snj-original-films-channel-banner.webp",
+    href: site.snjOriginalFilms,
+    summary: {
+      ko: "SF, 판타지, 미스터리와 새로운 세계를 담은 오리지널 시네마틱 필름",
+      en: "Original cinematic films across science fiction, fantasy, mystery, and new worlds."
+    }
+  }
+];
 
 function parseFrontmatter(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
@@ -283,10 +302,10 @@ function langToggle(locale, depth, alternateHref) {
   return `<div class="language-toggle" aria-label="Language"><a href="${alternateHref || base}">KR</a><strong>EN</strong></div>`;
 }
 
-function pageShell({ title, description, active = "", body, depth = 0, locale = "ko", alternateHref }) {
+function pageShell({ title, documentTitle, description, active = "", body, depth = 0, locale = "ko", alternateHref, bodyClass }) {
   const base = "../".repeat(depth);
-  const navHtml = navLabels[locale].map(([label, href]) => {
-    const activeClass = active === label || active === href ? " aria-current=\"page\"" : "";
+  const navHtml = navLabels[locale].map(([label, href, keys]) => {
+    const activeClass = keys.includes(active) ? " aria-current=\"page\"" : "";
     return `<a href="${base}${href}"${activeClass}>${label}</a>`;
   }).join("");
   return `<!doctype html>
@@ -295,12 +314,12 @@ function pageShell({ title, description, active = "", body, depth = 0, locale = 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${escapeHtml(description || copy[locale].description)}">
-    <title>${escapeHtml(title)} | ${site.title}</title>
+    <title>${documentTitle ? escapeHtml(documentTitle) : `${escapeHtml(title)} | ${site.title}`}</title>
     <link rel="stylesheet" href="${base}styles.css">
   </head>
-  <body>
+  <body${bodyClass ? ` class="${bodyClass}"` : ""}>
     <header class="site-header">
-      <a class="brand" href="${base}${locale === "en" ? "en/" : ""}" aria-label="S&J Studio Lab home">
+      <a class="brand" href="${base}${locale === "en" ? "en/" : ""}" aria-label="S&J Studio home">
         <img class="brand-mark" src="${base}assets/sj-studio-emblem.png" alt="" width="40" height="40">
         <span class="brand-text">
           <strong>S&J Studio</strong>
@@ -308,10 +327,18 @@ function pageShell({ title, description, active = "", body, depth = 0, locale = 
         </span>
       </a>
       <div class="header-actions">
-        <nav class="nav" aria-label="Primary navigation">${navHtml}</nav>
+        <nav class="nav" id="primary-nav" aria-label="Primary navigation">${navHtml}</nav>
         ${langToggle(locale, depth, alternateHref)}
+        <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Menu"><span></span></button>
       </div>
     </header>
+    <script>
+      document.querySelector(".menu-toggle").addEventListener("click", (event) => {
+        const open = event.currentTarget.getAttribute("aria-expanded") !== "true";
+        event.currentTarget.setAttribute("aria-expanded", String(open));
+        document.querySelector(".site-header").classList.toggle("menu-open", open);
+      });
+    </script>
     <main>${body}</main>
     <footer class="site-footer">
       <div>
@@ -360,27 +387,39 @@ function projectCards(locale, depth = 0) {
   }).join("");
 }
 
-function creatorCard(locale) {
-  const labels = locale === "ko"
-    ? ["1년+ AI 제작 실험", "실제 채널 운영", "공개 워크플로우 노트"]
-    : ["1yr+ AI production experiments", "Real channel operations", "Public workflow notes"];
-  const roles = locale === "ko"
-    ? ["AI 영상 제작자", "1인 스튜디오 워크플로우 설계자", "공개 제작 실험 운영자"]
-    : ["AI video creator", "Solo studio workflow designer", "Public production lab operator"];
-  return `
-    <aside class="creator-card" aria-label="Creator identity">
-      <div class="creator-card-main">
-        <img src="${locale === "en" ? "../" : ""}assets/shua-avatar.png" alt="Animated profile illustration of Shua">
-        <div>
-          <strong>Shua / S&J Studio</strong>
-          ${roles.map((role) => `<span>${escapeHtml(role)}</span>`).join("")}
-        </div>
-      </div>
-      <div class="trust-badges">
-        ${labels.map((label) => `<span>${escapeHtml(label)}</span>`).join("")}
-      </div>
-    </aside>
-  `;
+function channelCards(locale, depth) {
+  const base = "../".repeat(depth);
+  const cta = locale === "ko" ? "YouTube 채널 보기" : "View YouTube Channel";
+  return channels.map((channel) => `
+          <article class="channel-card">
+            <img class="channel-banner" src="${base}${channel.image}" alt="${escapeHtml(channel.name)}" width="1672" height="941">
+            <div class="channel-body">
+              <p>${escapeHtml(channel.summary[locale])}</p>
+              <a class="channel-cta" href="${escapeHtml(channel.href)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${channel.name} — ${cta}`)}">${cta}</a>
+            </div>
+          </article>`).join("");
+}
+
+function noteRows(entries, locale, depth) {
+  const base = "../".repeat(depth);
+  return entries.map((entry) => `
+          <article class="note-row">
+            <div class="note-meta">
+              <span>${escapeHtml(entry.category || "Note")}</span>
+              <time datetime="${escapeHtml(entry.date || "")}">${escapeHtml(entry.date || "")}</time>
+            </div>
+            <h3><a href="${base}${entry.section}/${entry.slug}/">${escapeHtml(entryTitle(entry, locale))}</a></h3>
+            <p>${escapeHtml(entrySummary(entry, locale))}</p>
+          </article>`).join("");
+}
+
+function resourceRows(entries, locale, depth) {
+  const base = "../".repeat(depth);
+  return entries.map((entry) => `
+          <a class="resource-row" href="${base}${entry.section}/${entry.slug}/">
+            <strong>${escapeHtml(entryTitle(entry, locale))}</strong>
+            <span>${escapeHtml(entrySummary(entry, locale))}</span>
+          </a>`).join("");
 }
 
 function homePage(locale, notes, templates) {
@@ -391,70 +430,62 @@ function homePage(locale, notes, templates) {
   const templatesRoute = locale === "en" ? "en/templates/" : "templates/";
   return pageShell({
     title: locale === "ko" ? "홈" : "Home",
+    documentTitle: "S&J Studio — Films, Channels & Studio Lab",
+    description: c.homeDescription,
     active: locale === "ko" ? "홈" : "Home",
+    bodyClass: "home-v2",
     locale,
     depth,
     body: `
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">${c.heroEyebrow}</p>
-          <h1>S&J Studio Lab</h1>
-          <p class="hero-subcopy">${c.heroCopy}</p>
-          <p class="hero-secondary">${c.heroSecondary}</p>
-          <div class="hero-actions">
-            <a class="button primary" href="${withBase(depth, notesRoute)}">${c.ctas[0]}</a>
-            <a class="button" href="${withBase(depth, templatesRoute)}">${c.ctas[1]}</a>
-            <a class="button ghost" href="${site.github}">${c.ctas[2]}</a>
-          </div>
+      <section class="v2-hero">
+        <p class="v2-eyebrow">${c.heroEyebrow}</p>
+        <h1>${c.heroTitle}</h1>
+        <p class="v2-lead">${c.heroCopy}</p>
+        <div class="v2-actions">
+          <a class="v2-button" href="#films">${c.ctas[0]}</a>
+          <a class="v2-link" href="#studio-lab">${c.ctas[1]} →</a>
         </div>
-        ${creatorCard(locale).replaceAll('src="assets/', `src="${assetBase}assets/`)}
       </section>
-      <section class="signal-band">
-        <div><span>${locale === "ko" ? "Position" : "Position"}</span><strong>${locale === "ko" ? "AI 영상 제작자" : "AI video creator"}</strong></div>
-        <div><span>${locale === "ko" ? "Method" : "Method"}</span><strong>${locale === "ko" ? "실패와 수정을 기록" : "Failure-led workflow notes"}</strong></div>
-        <div><span>${locale === "ko" ? "Output" : "Output"}</span><strong>${locale === "ko" ? "노트, 템플릿, 영상" : "Notes, templates, films"}</strong></div>
-      </section>
-      <section class="band intro-grid">
-        <div class="section-heading">
-          <p class="eyebrow">What this is</p>
-          <h2>${c.whatTitle}</h2>
+      <section class="v2-section" id="films">
+        <div class="v2-heading">
+          ${c.filmsEyebrow ? `<p class="v2-eyebrow">${c.filmsEyebrow}</p>` : ""}
+          <h2>${c.filmsTitle}</h2>
         </div>
-        <p>${c.whatBody}</p>
-      </section>
-      <section class="section">
-        <div class="section-heading">
-          <p class="eyebrow">${c.projects}</p>
-          <h2>${c.projectsTitle}</h2>
+        <div class="channel-grid">${channelCards(locale, depth)}
         </div>
-        <div class="project-grid compact">${projectCards(locale, depth)}</div>
       </section>
-      <section class="section split-list">
-        <div class="section-heading">
-          <p class="eyebrow">${c.notes}</p>
+      <section class="v2-section v2-notes" id="studio-lab">
+        <div class="v2-notes-intro">
+          <p class="v2-eyebrow">${c.notesEyebrow}</p>
           <h2>${c.notesTitle}</h2>
-          <a href="${withBase(depth, notesRoute)}">${c.allNotes}</a>
+          <p>${c.notesBody}</p>
+          <a class="v2-link" href="${withBase(depth, notesRoute)}">${c.allNotes} →</a>
         </div>
-        <div class="entry-list">${entryCards(notes.slice(0, 3), locale, depth)}</div>
-      </section>
-      <section class="section split-list">
-        <div class="section-heading">
-          <p class="eyebrow">${c.templates}</p>
-          <h2>${c.templatesTitle}</h2>
-          <a href="${withBase(depth, templatesRoute)}">${c.allTemplates}</a>
+        <div class="note-list">${noteRows(notes.slice(0, 3), locale, depth)}
         </div>
-        <div class="entry-list">${entryCards(templates, locale, depth)}</div>
       </section>
-      <section class="creator-strip">
-        <img src="${assetBase}assets/shua-avatar.png" alt="Animated profile illustration of Shua">
+      <section class="v2-section v2-resources">
+        <div class="v2-heading v2-heading-row">
+          <div>
+            <p class="v2-eyebrow">${c.templates}</p>
+            <h2>${c.templatesTitle}</h2>
+          </div>
+          <a class="v2-link" href="${withBase(depth, templatesRoute)}">${c.allTemplates} →</a>
+        </div>
+        <div class="resource-list">${resourceRows(templates.slice(0, 3), locale, depth)}
+        </div>
+      </section>
+      <section class="v2-section v2-creator">
+        <img src="${assetBase}assets/shua-avatar.png" alt="Animated profile illustration of Shua" width="96" height="96">
         <div>
-          <p class="eyebrow">${c.creatorEyebrow}</p>
+          <p class="v2-eyebrow">${c.creatorEyebrow}</p>
           <h2>${c.creatorTitle}</h2>
           <p>${c.creatorBody}</p>
-          <a class="text-link" href="${withBase(depth, locale === "en" ? "en/about/" : "about/")}">${c.creatorLink}</a>
+          <a class="v2-link" href="${withBase(depth, locale === "en" ? "en/about/" : "about/")}">${c.creatorLink} →</a>
         </div>
       </section>
-      <section class="contact-band">
-        <p class="eyebrow">Contact</p>
+      <section class="v2-section v2-contact">
+        <p class="v2-eyebrow">Contact</p>
         <h2>${c.contactTitle}</h2>
         <p>${c.contactBody}</p>
         <a href="mailto:${site.email}">${site.email}</a>
@@ -475,7 +506,9 @@ async function copyPublic() {
   await copyFile(path.join(publicDir, "styles.css"), path.join(dist, "styles.css"));
   await mkdir(path.join(dist, "assets"), { recursive: true });
   await copyFile(path.join(publicDir, "assets", "shua-avatar.png"), path.join(dist, "assets", "shua-avatar.png"));
-  await copyFile(path.join(publicDir, "assets", "sj-studio-emblem.png"), path.join(dist, "assets", "sj-studio-emblem.png"));
+  for (const asset of ["sj-studio-emblem.png", "korea-timeslip-channel-banner.webp", "snj-original-films-channel-banner.webp"]) {
+    await copyFile(path.join(publicDir, "assets", asset), path.join(dist, "assets", asset));
+  }
 }
 
 export async function build({ includeDrafts = false } = {}) {
