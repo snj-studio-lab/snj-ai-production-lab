@@ -11,7 +11,8 @@ const site = {
   title: "S&J Studio Lab",
   email: "snj.storylab@gmail.com",
   github: "https://github.com/snj-studio-lab/snj-ai-production-lab",
-  koreaTimeslip: "https://www.youtube.com/@KR_Timeslip"
+  koreaTimeslip: "https://www.youtube.com/@KR_Timeslip",
+  snjOriginalFilms: "https://www.youtube.com/@SNJOriginalFilms"
 };
 
 const navLabels = {
@@ -98,16 +99,15 @@ const projects = {
       label: "대표 작업 / 공개 채널",
       summary: "한국사를 바탕으로 한 대체역사 타임슬립 밀리터리 드라마 시리즈입니다.",
       actions: [
-        { label: "대표 영상 보기", href: site.koreaTimeslip, external: true },
-        { label: "제작 노트 보기", href: "lab-notes/" }
+        { label: "YouTube 채널 보기", href: site.koreaTimeslip, external: true }
       ]
     },
     {
       title: "SNJ ORIGINAL FILMS",
-      label: "시네마틱 케이스 파일 / 제작 중",
-      summary: "글로벌 시네마틱 미스터리 / 이상현상 케이스 파일 프로젝트입니다.",
+      label: "오리지널 시네마틱 필름",
+      summary: "SF, 판타지, 미스터리와 새로운 세계를 담은 S&J Studio의 오리지널 시네마틱 영화 채널입니다.",
       actions: [
-        { label: "제작 노트 보기", href: "lab-notes/" }
+        { label: "YouTube 채널 보기", href: site.snjOriginalFilms, external: true }
       ]
     }
   ],
@@ -126,16 +126,15 @@ const projects = {
       label: "Published Channel",
       summary: "A Korean-history-based alternate-history time-slip military drama series.",
       actions: [
-        { label: "View Channel", href: site.koreaTimeslip, external: true },
-        { label: "Read Production Notes", href: "en/lab-notes/" }
+        { label: "View YouTube Channel", href: site.koreaTimeslip, external: true }
       ]
     },
     {
       title: "SNJ ORIGINAL FILMS",
-      label: "Case Files / In Production",
-      summary: "Global cinematic mystery and anomaly case files.",
+      label: "Original Cinematic Films",
+      summary: "S&J Studio's original cinematic channel for science fiction, fantasy, mystery, and new worlds.",
       actions: [
-        { label: "Read Production Notes", href: "en/lab-notes/" }
+        { label: "View YouTube Channel", href: site.snjOriginalFilms, external: true }
       ]
     }
   ]
@@ -300,8 +299,11 @@ function pageShell({ title, description, active = "", body, depth = 0, locale = 
   <body>
     <header class="site-header">
       <a class="brand" href="${base}${locale === "en" ? "en/" : ""}" aria-label="S&J Studio Lab home">
-        <span class="brand-mark">S&J</span>
-        <span>Studio Lab</span>
+        <img class="brand-mark" src="${base}assets/sj-studio-emblem.png" alt="" width="40" height="40">
+        <span class="brand-text">
+          <strong>S&J Studio</strong>
+          <small>Studio Lab</small>
+        </span>
       </a>
       <div class="header-actions">
         <nav class="nav" aria-label="Primary navigation">${navHtml}</nav>
@@ -470,6 +472,7 @@ async function copyPublic() {
   await copyFile(path.join(publicDir, "styles.css"), path.join(dist, "styles.css"));
   await mkdir(path.join(dist, "assets"), { recursive: true });
   await copyFile(path.join(publicDir, "assets", "shua-avatar.png"), path.join(dist, "assets", "shua-avatar.png"));
+  await copyFile(path.join(publicDir, "assets", "sj-studio-emblem.png"), path.join(dist, "assets", "sj-studio-emblem.png"));
 }
 
 export async function build({ includeDrafts = false } = {}) {
@@ -742,8 +745,8 @@ export async function build({ includeDrafts = false } = {}) {
     body: `
       <section class="page-title">
         <p class="eyebrow">Projects</p>
-        <h1>내부 IP를 과하게 노출하지 않고 공개 가능한 제작 신호만 정리합니다.</h1>
-        <p>S&J Studio Lab이 만들고, 테스트하고, 공개 기록으로 남기는 프로젝트입니다.</p>
+        <h1>S&J Studio의 작품과 운영 채널을 소개합니다.</h1>
+        <p>역사 시네마틱부터 오리지널 필름까지, 현재 공개 중인 작품과 채널을 한곳에서 만나보세요.</p>
       </section>
       <section class="project-grid">${projectCards("ko", 1)}</section>
     `
