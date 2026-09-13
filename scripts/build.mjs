@@ -34,7 +34,7 @@ const navLabels = {
 const copy = {
   ko: {
     description: "AI 영상 제작의 결과물뿐 아니라 실제 제작 과정에서 무너지고 복구되는 워크플로우를 기록하는 공개 제작 실험실입니다.",
-    homeDescription: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS를 비롯한 S&J Studio의 시네마틱 작품과 제작 기록을 만나보세요.",
+    homeDescription: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS의 오리지널 시네마틱 작품과, 그 제작 과정을 기록하는 S&J Studio의 Studio Lab.",
     heroEyebrow: "S&J Studio",
     heroTitle: "시대와 세계를 넘나드는 이야기를,<br>영화로 만듭니다.",
     heroCopy: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS의 오리지널 시네마틱 작품, 그리고 그 제작 과정을 기록하는 Studio Lab.",
@@ -57,7 +57,7 @@ const copy = {
   },
   en: {
     description: "A public creator lab documenting the workflows, failures, and production systems behind AI-assisted cinematic video.",
-    homeDescription: "Explore S&J Studio's films, channels, and the production notes behind them.",
+    homeDescription: "Original cinematic works from Korea Time-Slip HQ and SNJ ORIGINAL FILMS, with production notes from S&J Studio's Studio Lab.",
     heroEyebrow: "S&J Studio",
     heroTitle: "Stories across eras and worlds, made cinematic.",
     heroCopy: "Original cinematic works from Korea Time-Slip HQ and SNJ ORIGINAL FILMS, with production notes from Studio Lab.",
@@ -94,7 +94,7 @@ const projects = {
     {
       title: "대한 타임슬립 본부 | Korea Time-Slip HQ",
       label: "대표 작업 / 공개 채널",
-      summary: "한국사를 바탕으로 한 대체역사 타임슬립 밀리터리 드라마 시리즈입니다.",
+      summary: "과거·현재·미래를 넘나드는 오리지널 타임슬립 액션 시리즈입니다.",
       actions: [
         { label: "YouTube 채널 보기", href: site.koreaTimeslip, external: true }
       ]
@@ -121,7 +121,7 @@ const projects = {
     {
       title: "Korea Time-Slip HQ",
       label: "Published Channel",
-      summary: "A Korean-history-based alternate-history time-slip military drama series.",
+      summary: "Original cinematic time-slip action across the past, present, and future.",
       actions: [
         { label: "View YouTube Channel", href: site.koreaTimeslip, external: true }
       ]
