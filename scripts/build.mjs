@@ -28,9 +28,9 @@ const navLabels = {
     ["Home", "en/"],
     ["About", "en/about/"],
     ["Lab Notes", "en/lab-notes/"],
-    ["Templates", "templates/"],
-    ["Projects", "projects/"],
-    ["Contact", "contact/"]
+    ["Templates", "en/templates/"],
+    ["Projects", "en/projects/"],
+    ["Contact", "en/contact/"]
   ]
 };
 
@@ -175,7 +175,9 @@ async function readCollection(collection) {
           ? "drafts"
           : collection === "drafts-en"
             ? "en/drafts"
-            : "templates"
+            : collection === "templates-en"
+              ? "en/templates"
+              : "templates"
     });
   }
   return entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -386,6 +388,7 @@ function homePage(locale, notes, templates) {
   const depth = locale === "en" ? 1 : 0;
   const assetBase = locale === "en" ? "../" : "";
   const notesRoute = locale === "en" ? "en/lab-notes/" : "lab-notes/";
+  const templatesRoute = locale === "en" ? "en/templates/" : "templates/";
   return pageShell({
     title: locale === "ko" ? "홈" : "Home",
     active: locale === "ko" ? "홈" : "Home",
@@ -400,7 +403,7 @@ function homePage(locale, notes, templates) {
           <p class="hero-secondary">${c.heroSecondary}</p>
           <div class="hero-actions">
             <a class="button primary" href="${withBase(depth, notesRoute)}">${c.ctas[0]}</a>
-            <a class="button" href="${withBase(depth, "templates/")}">${c.ctas[1]}</a>
+            <a class="button" href="${withBase(depth, templatesRoute)}">${c.ctas[1]}</a>
             <a class="button ghost" href="${site.github}">${c.ctas[2]}</a>
           </div>
         </div>
@@ -437,7 +440,7 @@ function homePage(locale, notes, templates) {
         <div class="section-heading">
           <p class="eyebrow">${c.templates}</p>
           <h2>${c.templatesTitle}</h2>
-          <a href="${withBase(depth, "templates/")}">${c.allTemplates}</a>
+          <a href="${withBase(depth, templatesRoute)}">${c.allTemplates}</a>
         </div>
         <div class="entry-list">${entryCards(templates, locale, depth)}</div>
       </section>
@@ -479,6 +482,7 @@ export async function build({ includeDrafts = false } = {}) {
   const notes = await readCollection("notes");
   const notesEn = await readCollection("notes-en");
   const templates = await readCollection("templates");
+  const templatesEn = await readCollection("templates-en");
   const drafts = includeDrafts ? await readCollection("drafts") : [];
   const draftsEn = includeDrafts ? await readCollection("drafts-en") : [];
   await rm(dist, { recursive: true, force: true });
@@ -492,6 +496,7 @@ export async function build({ includeDrafts = false } = {}) {
     active: "About",
     depth: 2,
     locale: "en",
+    alternateHref: "../../about/",
     body: `
       <section class="page-title two-column">
         <div>
@@ -522,6 +527,7 @@ export async function build({ includeDrafts = false } = {}) {
     active: "소개",
     depth: 1,
     locale: "ko",
+    alternateHref: "../en/about/",
     body: `
       <section class="page-title two-column">
         <div>
@@ -570,7 +576,7 @@ export async function build({ includeDrafts = false } = {}) {
       active: "Lab Notes",
       depth: 2,
       locale: "ko",
-      alternateHref: hasEnglishVersion ? `../../en/lab-notes/${note.slug}/` : undefined,
+      alternateHref: hasEnglishVersion ? `../../en/lab-notes/${note.slug}/` : "../../en/lab-notes/",
       description: entrySummary(note, "ko"),
       body: `
         <article class="prose article">
@@ -602,12 +608,13 @@ export async function build({ includeDrafts = false } = {}) {
   }));
 
   for (const note of notesEn) {
+    const hasKoreanVersion = notes.some((entry) => entry.slug === note.slug);
     await writePage(`en/lab-notes/${note.slug}`, pageShell({
       title: entryTitle(note, "en"),
       active: "Lab Notes",
       depth: 3,
       locale: "en",
-      alternateHref: `../../../lab-notes/${note.slug}/`,
+      alternateHref: hasKoreanVersion ? `../../../lab-notes/${note.slug}/` : "../../../lab-notes/",
       description: entrySummary(note, "en"),
       body: `
         <article class="prose article">
@@ -714,19 +721,64 @@ export async function build({ includeDrafts = false } = {}) {
         <p>AI 영상 제작의 판단 기준을 문서화하기 위한 가벼운 구조입니다.</p>
       </section>
       <section class="entry-list wide">${entryCards(templates, "ko", 1)}</section>
-    `
+    `,
+    alternateHref: "../en/templates/"
   }));
 
   for (const template of templates) {
+    const hasEnglishVersion = templatesEn.some((entry) => entry.slug === template.slug);
     await writePage(`templates/${template.slug}`, pageShell({
       title: entryTitle(template, "ko"),
       active: "Templates",
       depth: 2,
       locale: "ko",
+      alternateHref: hasEnglishVersion ? `../../en/templates/${template.slug}/` : "../../en/templates/",
       description: entrySummary(template, "ko"),
       body: `
         <article class="prose article">
           <a class="back-link" href="../">Templates로 돌아가기</a>
+          <div class="entry-meta">
+            <span>${escapeHtml(template.category)}</span>
+            <time datetime="${escapeHtml(template.date)}">${escapeHtml(template.date)}</time>
+          </div>
+          ${markdownToHtml(template.body)}
+        </article>
+      `
+    }));
+  }
+
+  const koreanOnlyTemplates = templates
+    .filter((template) => !templatesEn.some((entry) => entry.slug === template.slug))
+    .map((template) => ({ ...template, category: `${template.category || "Template"} · Available in Korean` }));
+
+  await writePage("en/templates", pageShell({
+    title: "Templates",
+    active: "Templates",
+    depth: 2,
+    locale: "en",
+    alternateHref: "../../templates/",
+    body: `
+      <section class="page-title">
+        <p class="eyebrow">Templates</p>
+        <h1>Public Templates</h1>
+        <p>Reusable production templates published by S&J Studio Lab. English versions are added when available.</p>
+      </section>
+      <section class="entry-list wide">${entryCards([...templatesEn, ...koreanOnlyTemplates], "en", 2)}</section>
+    `
+  }));
+
+  for (const template of templatesEn) {
+    const hasKoreanVersion = templates.some((entry) => entry.slug === template.slug);
+    await writePage(`en/templates/${template.slug}`, pageShell({
+      title: entryTitle(template, "en"),
+      active: "Templates",
+      depth: 3,
+      locale: "en",
+      alternateHref: hasKoreanVersion ? `../../../templates/${template.slug}/` : "../../../templates/",
+      description: entrySummary(template, "en"),
+      body: `
+        <article class="prose article">
+          <a class="back-link" href="../">Back to Templates</a>
           <div class="entry-meta">
             <span>${escapeHtml(template.category)}</span>
             <time datetime="${escapeHtml(template.date)}">${escapeHtml(template.date)}</time>
@@ -742,6 +794,7 @@ export async function build({ includeDrafts = false } = {}) {
     active: "Projects",
     depth: 1,
     locale: "ko",
+    alternateHref: "../en/projects/",
     body: `
       <section class="page-title">
         <p class="eyebrow">Projects</p>
@@ -752,11 +805,27 @@ export async function build({ includeDrafts = false } = {}) {
     `
   }));
 
+  await writePage("en/projects", pageShell({
+    title: "Projects",
+    active: "Projects",
+    depth: 2,
+    locale: "en",
+    alternateHref: "../../projects/",
+    body: `
+      <section class="page-title">
+        <p class="eyebrow">Projects</p>
+        <h1>Explore S&J Studio's films and channels, from cinematic history to original screen stories.</h1>
+      </section>
+      <section class="project-grid">${projectCards("en", 2)}</section>
+    `
+  }));
+
   await writePage("contact", pageShell({
     title: "Contact",
     active: "Contact",
     depth: 1,
     locale: "ko",
+    alternateHref: "../en/contact/",
     body: `
       <section class="page-title">
         <p class="eyebrow">Contact</p>
@@ -779,6 +848,39 @@ export async function build({ includeDrafts = false } = {}) {
         <div>
           <span>YouTube</span>
           <strong>공식 링크 준비 중</strong>
+        </div>
+      </section>
+    `
+  }));
+
+  await writePage("en/contact", pageShell({
+    title: "Contact",
+    active: "Contact",
+    depth: 2,
+    locale: "en",
+    alternateHref: "../../contact/",
+    body: `
+      <section class="page-title">
+        <p class="eyebrow">Contact</p>
+        <h1>Collaboration, consulting, and project inquiries</h1>
+        <p>${copy.en.contactBody}</p>
+      </section>
+      <section class="contact-panel">
+        <div>
+          <span>Studio</span>
+          <strong>S&J Studio</strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <a href="mailto:${site.email}">${site.email}</a>
+        </div>
+        <div>
+          <span>GitHub</span>
+          <a href="${site.github}">${site.github}</a>
+        </div>
+        <div>
+          <span>YouTube</span>
+          <strong>Official link coming soon</strong>
         </div>
       </section>
     `
