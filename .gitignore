@@ -1,0 +1,9 @@
+node_modules/
+.astro/
+dist/
+server.*.log
+qa-*.png
+
+# Local-only dev launcher and temporary request inbox
+/OPEN-SNJ-STUDIO-LAB.bat
+/user_input/
