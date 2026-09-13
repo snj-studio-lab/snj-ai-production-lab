@@ -93,6 +93,7 @@ const projects = {
     },
     {
       title: "대한 타임슬립 본부 | Korea Time-Slip HQ",
+      image: "assets/korea-timeslip-channel-banner.webp",
       label: "대표 작업 / 공개 채널",
       summary: "과거·현재·미래를 넘나드는 오리지널 타임슬립 액션 시리즈입니다.",
       actions: [
@@ -101,8 +102,9 @@ const projects = {
     },
     {
       title: "SNJ ORIGINAL FILMS",
+      image: "assets/snj-original-films-channel-banner.webp",
       label: "오리지널 시네마틱 필름",
-      summary: "SF, 판타지, 미스터리와 새로운 세계를 담은 S&J Studio의 오리지널 시네마틱 영화 채널입니다.",
+      summary: "SF · 판타지 · 액션을 넘나드는 오리지널 시네마틱 필름",
       actions: [
         { label: "YouTube 채널 보기", href: site.snjOriginalFilms, external: true }
       ]
@@ -120,6 +122,7 @@ const projects = {
     },
     {
       title: "Korea Time-Slip HQ",
+      image: "assets/korea-timeslip-channel-banner.webp",
       label: "Published Channel",
       summary: "Original cinematic time-slip action across the past, present, and future.",
       actions: [
@@ -128,8 +131,9 @@ const projects = {
     },
     {
       title: "SNJ ORIGINAL FILMS",
+      image: "assets/snj-original-films-channel-banner.webp",
       label: "Original Cinematic Films",
-      summary: "S&J Studio's original cinematic channel for science fiction, fantasy, mystery, and new worlds.",
+      summary: "Original cinematic films across science fiction, fantasy, and action.",
       actions: [
         { label: "View YouTube Channel", href: site.snjOriginalFilms, external: true }
       ]
@@ -308,6 +312,7 @@ function pageShell({ title, documentTitle, description, active = "", body, depth
     const activeClass = keys.includes(active) ? " aria-current=\"page\"" : "";
     return `<a href="${base}${href}"${activeClass}>${label}</a>`;
   }).join("");
+  const footerNavHtml = navLabels[locale].map(([label, href]) => `<a href="${base}${href}">${label}</a>`).join("");
   return `<!doctype html>
 <html lang="${locale === "ko" ? "ko" : "en"}">
   <head>
@@ -319,17 +324,19 @@ function pageShell({ title, documentTitle, description, active = "", body, depth
   </head>
   <body${bodyClass ? ` class="${bodyClass}"` : ""}>
     <header class="site-header">
-      <a class="brand" href="${base}${locale === "en" ? "en/" : ""}" aria-label="S&J Studio home">
-        <img class="brand-mark" src="${base}assets/sj-studio-emblem.png" alt="" width="40" height="40">
-        <span class="brand-text">
-          <strong>S&J Studio</strong>
-          <small>Studio Lab</small>
-        </span>
-      </a>
-      <div class="header-actions">
-        <nav class="nav" id="primary-nav" aria-label="Primary navigation">${navHtml}</nav>
-        ${langToggle(locale, depth, alternateHref)}
-        <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Menu"><span></span></button>
+      <div class="header-inner">
+        <a class="brand" href="${base}${locale === "en" ? "en/" : ""}" aria-label="S&J Studio home">
+          <img class="brand-mark" src="${base}assets/sj-studio-emblem.png" alt="" width="36" height="36">
+          <span class="brand-text">
+            <strong>S&J Studio</strong>
+            <small>Studio Lab</small>
+          </span>
+        </a>
+        <div class="header-actions">
+          <nav class="nav" id="primary-nav" aria-label="Primary navigation">${navHtml}</nav>
+          ${langToggle(locale, depth, alternateHref)}
+          <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Menu"><span></span></button>
+        </div>
       </div>
     </header>
     <script>
@@ -341,12 +348,17 @@ function pageShell({ title, documentTitle, description, active = "", body, depth
     </script>
     <main>${body}</main>
     <footer class="site-footer">
-      <div>
-        <strong>S&J Studio</strong>
-        <span>${site.email}</span>
-      </div>
-      <div class="footer-links">
-        <a href="${site.github}">GitHub</a>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="${base}assets/sj-studio-emblem.png" alt="" width="28" height="28">
+          <span><strong>S&J Studio</strong> · Studio Lab</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer navigation">${footerNavHtml}</nav>
+        <div class="footer-meta">
+          <a href="mailto:${site.email}">${site.email}</a>
+          <a href="${site.github}">GitHub</a>
+          <span>© ${new Date().getFullYear()} S&J Studio</span>
+        </div>
       </div>
     </footer>
   </body>
@@ -367,24 +379,156 @@ function entryCards(entries, locale, depth = 0) {
   `).join("");
 }
 
-function projectActionLink(action, depth) {
+function projectActionLink(action, depth, className) {
   const href = action.external ? action.href : withBase(depth, action.href);
   const target = action.external ? ' target="_blank" rel="noreferrer"' : "";
-  return `<a class="project-action" href="${escapeHtml(href)}"${target}>${escapeHtml(action.label)}</a>`;
+  return `<a class="${className}" href="${escapeHtml(href)}"${target}>${escapeHtml(action.label)}</a>`;
 }
 
-function projectCards(locale, depth = 0) {
-  return projects[locale].map((project) => {
+// Projects catalog: channel rows with their real banners, then the Studio Lab panel.
+function projectCatalog(locale, depth) {
+  const base = "../".repeat(depth);
+  const rows = projects[locale].filter((project) => project.image).map((project) => `
+      <article class="property-row">
+        <img class="property-media" src="${base}${project.image}" alt="${escapeHtml(project.title)}" width="1672" height="941">
+        <div class="property-body">
+          <p class="card-kicker">${escapeHtml(project.label)}</p>
+          <h2>${escapeHtml(project.title)}</h2>
+          <p>${escapeHtml(project.summary)}</p>
+          <div class="action-row">${project.actions.map((action) => projectActionLink(action, depth, "btn-primary")).join("")}</div>
+        </div>
+      </article>`).join("");
+  const panels = projects[locale].filter((project) => !project.image).map((project) => `
+      <aside class="lab-panel">
+        <div>
+          <p class="card-kicker">${escapeHtml(project.label)}</p>
+          <h2>${escapeHtml(project.title)}</h2>
+          <p>${escapeHtml(project.summary)}</p>
+        </div>
+        <div class="action-row">${project.actions.map((action) => projectActionLink(action, depth, "btn-secondary")).join("")}</div>
+      </aside>`).join("");
+  return `<section class="property-list">${rows}</section>${panels}`;
+}
+
+// Lab Notes index: newest note featured, the rest as an editorial archive.
+function journalIndex(entries, locale, depth) {
+  if (!entries.length) return "";
+  const base = "../".repeat(depth);
+  const href = (entry) => `${base}${entry.section}/${entry.slug}/`;
+  const [latest, ...rest] = entries;
+  const labels = locale === "ko"
+    ? { latest: "최신 노트", read: "노트 읽기", all: copy.ko.allNotes }
+    : { latest: "Latest note", read: "Read note", all: copy.en.allNotes };
+  const rows = rest.map((entry) => `
+        <article class="archive-row">
+          <div class="archive-meta">
+            <span>${escapeHtml(entry.category || "Note")}</span>
+            <time datetime="${escapeHtml(entry.date || "")}">${escapeHtml(entry.date || "")}</time>
+          </div>
+          <div>
+            <h3><a href="${href(entry)}">${escapeHtml(entryTitle(entry, locale))}</a></h3>
+            <p>${escapeHtml(entrySummary(entry, locale))}</p>
+          </div>
+        </article>`).join("");
+  return `
+      <section class="featured-note">
+        <p class="card-kicker">${labels.latest} · ${escapeHtml(latest.category || "Note")}</p>
+        <h2><a href="${href(latest)}">${escapeHtml(entryTitle(latest, locale))}</a></h2>
+        <p>${escapeHtml(entrySummary(latest, locale))}</p>
+        <div class="featured-foot">
+          <time datetime="${escapeHtml(latest.date || "")}">${escapeHtml(latest.date || "")}</time>
+          <a class="text-cta" href="${href(latest)}">${labels.read} →</a>
+        </div>
+      </section>
+      ${rows ? `<section class="archive">
+        <h2 class="archive-title">${labels.all}</h2>
+        <div class="archive-list">${rows}
+        </div>
+      </section>` : ""}`;
+}
+
+// Templates index: studio resource cards.
+function resourceCards(entries, locale, depth, koreanOnlySlugs = []) {
+  const base = "../".repeat(depth);
+  const openLabel = locale === "ko" ? "템플릿 열기" : "Open template";
+  return `<section class="resource-grid">${entries.map((entry) => {
+    const href = `${base}${entry.section}/${entry.slug}/`;
+    const koreanOnly = koreanOnlySlugs.includes(entry.slug);
     return `
-    <article class="project-card">
-      <span class="project-label">${escapeHtml(project.label)}</span>
-      <h2>${escapeHtml(project.title)}</h2>
-      <p>${escapeHtml(project.summary)}</p>
-      <div class="project-actions">
-        ${(project.actions || []).map((action) => projectActionLink(action, depth)).join("")}
-      </div>
-    </article>`;
-  }).join("");
+      <article class="resource-card">
+        <div class="resource-head">
+          <p class="card-kicker">${escapeHtml(entry.category || "Template")}</p>
+          ${koreanOnly ? `<span class="pill">Available in Korean</span>` : ""}
+        </div>
+        <h2><a href="${href}">${escapeHtml(entryTitle(entry, locale))}</a></h2>
+        <p>${escapeHtml(entrySummary(entry, locale))}</p>
+        <div class="resource-foot">
+          <time datetime="${escapeHtml(entry.date || "")}">${escapeHtml(entry.date || "")}</time>
+          <a class="btn-secondary" href="${href}">${openLabel} →</a>
+        </div>
+      </article>`;
+  }).join("")}
+    </section>`;
+}
+
+// Long-form article for notes and templates. The Markdown body normally opens with its own H1.
+function articlePage({ entry, locale, backLabel, list = [] }) {
+  const html = markdownToHtml(entry.body);
+  const hasTitle = html.startsWith("<h1>");
+  const breakAt = html.indexOf("\n");
+  const titleHtml = hasTitle ? (breakAt === -1 ? html : html.slice(0, breakAt)) : `<h1>${escapeHtml(entryTitle(entry, locale))}</h1>`;
+  const bodyHtml = hasTitle ? (breakAt === -1 ? "" : html.slice(breakAt + 1)) : html;
+  const summary = entrySummary(entry, locale);
+  const index = list.findIndex((item) => item.slug === entry.slug);
+  const older = index >= 0 ? list[index + 1] : undefined;
+  const newer = index > 0 ? list[index - 1] : undefined;
+  const pagerLabels = locale === "ko" ? ["이전 노트", "다음 노트"] : ["Previous note", "Next note"];
+  const pagerLink = (item, label, className) => item
+    ? `<a class="${className}" href="../${item.slug}/"><span>${label}</span><strong>${escapeHtml(entryTitle(item, locale))}</strong></a>`
+    : "";
+  const pager = older || newer
+    ? `<nav class="article-pager" aria-label="${locale === "ko" ? "노트 이동" : "Note navigation"}">${pagerLink(older, `← ${pagerLabels[0]}`, "pager-prev")}${pagerLink(newer, `${pagerLabels[1]} →`, "pager-next")}</nav>`
+    : "";
+  return `
+        <article class="article">
+          <a class="back-link" href="../">← ${backLabel}</a>
+          <div class="article-meta">
+            <span>${escapeHtml(entry.category || "")}</span>
+            <time datetime="${escapeHtml(entry.date || "")}">${escapeHtml(entry.date || "")}</time>
+          </div>
+          <header class="article-header">
+            ${titleHtml}
+            ${summary ? `<p class="article-lead">${escapeHtml(summary)}</p>` : ""}
+          </header>
+          <div class="article-body">
+            ${bodyHtml}
+          </div>
+          ${pager}
+        </article>
+      `;
+}
+
+function contactCards(locale) {
+  const labels = locale === "ko" ? ["공식 링크 준비 중"] : ["Official link coming soon"];
+  return `
+      <section class="contact-panel">
+        <div>
+          <span>Studio</span>
+          <strong>S&J Studio</strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <a href="mailto:${site.email}">${site.email}</a>
+        </div>
+        <div>
+          <span>GitHub</span>
+          <a href="${site.github}">${site.github}</a>
+        </div>
+        <div>
+          <span>YouTube</span>
+          <strong>${labels[0]}</strong>
+        </div>
+      </section>`;
 }
 
 function channelCards(locale, depth) {
@@ -524,6 +668,14 @@ export async function build({ includeDrafts = false } = {}) {
   await writePage("", homePage("ko", notes, templates));
   await writePage("en", homePage("en", notesEn, templates));
 
+  const aboutContact = (locale) => `
+      <section class="about-contact">
+        <p class="eyebrow">Contact</p>
+        <h2>${copy[locale].contactTitle}</h2>
+        <p>${copy[locale].contactBody}</p>
+        ${contactCards(locale)}
+      </section>`;
+
   await writePage("en/about", pageShell({
     title: "About",
     active: "About",
@@ -552,6 +704,7 @@ export async function build({ includeDrafts = false } = {}) {
           <li>Public notes from project experiments</li>
         </ul>
       </section>
+      ${aboutContact("en")}
     `
   }));
 
@@ -583,6 +736,7 @@ export async function build({ includeDrafts = false } = {}) {
           <li>공개 가능한 프로젝트 실험 노트</li>
         </ul>
       </section>
+      ${aboutContact("ko")}
     `
   }));
 
@@ -594,11 +748,11 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../en/lab-notes/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Lab Notes</p>
+        <p class="eyebrow">Studio Lab · Lab Notes</p>
         <h1>AI 영상 제작의 실패, 수정, 반복 가능성을 기록합니다.</h1>
         <p>실제 제작 과정에서 얻은 실패와 수정 기준을 정리한 공개 노트입니다.</p>
       </section>
-      <section class="entry-list wide">${entryCards(notes, "ko", 1)}</section>
+      ${journalIndex(notes, "ko", 1)}
     `
   }));
 
@@ -611,16 +765,7 @@ export async function build({ includeDrafts = false } = {}) {
       locale: "ko",
       alternateHref: hasEnglishVersion ? `../../en/lab-notes/${note.slug}/` : "../../en/lab-notes/",
       description: entrySummary(note, "ko"),
-      body: `
-        <article class="prose article">
-          <a class="back-link" href="../">Lab Notes로 돌아가기</a>
-          <div class="entry-meta">
-            <span>${escapeHtml(note.category)}</span>
-            <time datetime="${escapeHtml(note.date)}">${escapeHtml(note.date)}</time>
-          </div>
-          ${markdownToHtml(note.body)}
-        </article>
-      `
+      body: articlePage({ entry: note, locale: "ko", backLabel: "Lab Notes로 돌아가기", list: notes })
     }));
   }
 
@@ -632,11 +777,11 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../../lab-notes/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Lab Notes</p>
+        <p class="eyebrow">Studio Lab · Lab Notes</p>
         <h1>Failures, revisions, and repeatable knowledge from AI video production.</h1>
         <p>Public notes derived from real production attempts and edited for safe reuse.</p>
       </section>
-      <section class="entry-list wide">${entryCards(notesEn, "en", 2)}</section>
+      ${journalIndex(notesEn, "en", 2)}
     `
   }));
 
@@ -649,16 +794,7 @@ export async function build({ includeDrafts = false } = {}) {
       locale: "en",
       alternateHref: hasKoreanVersion ? `../../../lab-notes/${note.slug}/` : "../../../lab-notes/",
       description: entrySummary(note, "en"),
-      body: `
-        <article class="prose article">
-          <a class="back-link" href="../">Back to Lab Notes</a>
-          <div class="entry-meta">
-            <span>${escapeHtml(note.category)}</span>
-            <time datetime="${escapeHtml(note.date)}">${escapeHtml(note.date)}</time>
-          </div>
-          ${markdownToHtml(note.body)}
-        </article>
-      `
+      body: articlePage({ entry: note, locale: "en", backLabel: "Back to Lab Notes", list: notesEn })
     }));
   }
 
@@ -749,11 +885,11 @@ export async function build({ includeDrafts = false } = {}) {
     locale: "ko",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Templates</p>
+        <p class="eyebrow">Studio Lab · Templates</p>
         <h1>아이디어를 실제 제작으로 넘기기 전 확인하는 공개 템플릿입니다.</h1>
         <p>AI 영상 제작의 판단 기준을 문서화하기 위한 가벼운 구조입니다.</p>
       </section>
-      <section class="entry-list wide">${entryCards(templates, "ko", 1)}</section>
+      ${resourceCards(templates, "ko", 1)}
     `,
     alternateHref: "../en/templates/"
   }));
@@ -767,22 +903,11 @@ export async function build({ includeDrafts = false } = {}) {
       locale: "ko",
       alternateHref: hasEnglishVersion ? `../../en/templates/${template.slug}/` : "../../en/templates/",
       description: entrySummary(template, "ko"),
-      body: `
-        <article class="prose article">
-          <a class="back-link" href="../">Templates로 돌아가기</a>
-          <div class="entry-meta">
-            <span>${escapeHtml(template.category)}</span>
-            <time datetime="${escapeHtml(template.date)}">${escapeHtml(template.date)}</time>
-          </div>
-          ${markdownToHtml(template.body)}
-        </article>
-      `
+      body: articlePage({ entry: template, locale: "ko", backLabel: "Templates로 돌아가기" })
     }));
   }
 
-  const koreanOnlyTemplates = templates
-    .filter((template) => !templatesEn.some((entry) => entry.slug === template.slug))
-    .map((template) => ({ ...template, category: `${template.category || "Template"} · Available in Korean` }));
+  const koreanOnlyTemplates = templates.filter((template) => !templatesEn.some((entry) => entry.slug === template.slug));
 
   await writePage("en/templates", pageShell({
     title: "Templates",
@@ -792,11 +917,11 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../../templates/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Templates</p>
+        <p class="eyebrow">Studio Lab · Templates</p>
         <h1>Public Templates</h1>
         <p>Reusable production templates published by S&J Studio Lab. English versions are added when available.</p>
       </section>
-      <section class="entry-list wide">${entryCards([...templatesEn, ...koreanOnlyTemplates], "en", 2)}</section>
+      ${resourceCards([...templatesEn, ...koreanOnlyTemplates], "en", 2, koreanOnlyTemplates.map((template) => template.slug))}
     `
   }));
 
@@ -809,16 +934,7 @@ export async function build({ includeDrafts = false } = {}) {
       locale: "en",
       alternateHref: hasKoreanVersion ? `../../../templates/${template.slug}/` : "../../../templates/",
       description: entrySummary(template, "en"),
-      body: `
-        <article class="prose article">
-          <a class="back-link" href="../">Back to Templates</a>
-          <div class="entry-meta">
-            <span>${escapeHtml(template.category)}</span>
-            <time datetime="${escapeHtml(template.date)}">${escapeHtml(template.date)}</time>
-          </div>
-          ${markdownToHtml(template.body)}
-        </article>
-      `
+      body: articlePage({ entry: template, locale: "en", backLabel: "Back to Templates" })
     }));
   }
 
@@ -830,11 +946,11 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../en/projects/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Projects</p>
+        <p class="eyebrow">Films & Channels</p>
         <h1>S&J Studio의 작품과 운영 채널을 소개합니다.</h1>
         <p>역사 시네마틱부터 오리지널 필름까지, 현재 공개 중인 작품과 채널을 한곳에서 만나보세요.</p>
       </section>
-      <section class="project-grid">${projectCards("ko", 1)}</section>
+      ${projectCatalog("ko", 1)}
     `
   }));
 
@@ -846,10 +962,10 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../../projects/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Projects</p>
+        <p class="eyebrow">Films & Channels</p>
         <h1>Explore S&J Studio's films and channels, from cinematic history to original screen stories.</h1>
       </section>
-      <section class="project-grid">${projectCards("en", 2)}</section>
+      ${projectCatalog("en", 2)}
     `
   }));
 
@@ -865,24 +981,7 @@ export async function build({ includeDrafts = false } = {}) {
         <h1>협업, 컨설팅, 프로젝트 소개</h1>
         <p>AI 영상 제작, 공개 템플릿, 1인 스튜디오 워크플로우와 관련된 대화를 환영합니다.</p>
       </section>
-      <section class="contact-panel">
-        <div>
-          <span>Studio</span>
-          <strong>S&J Studio</strong>
-        </div>
-        <div>
-          <span>Email</span>
-          <a href="mailto:${site.email}">${site.email}</a>
-        </div>
-        <div>
-          <span>GitHub</span>
-          <a href="${site.github}">${site.github}</a>
-        </div>
-        <div>
-          <span>YouTube</span>
-          <strong>공식 링크 준비 중</strong>
-        </div>
-      </section>
+      ${contactCards("ko")}
     `
   }));
 
@@ -898,24 +997,7 @@ export async function build({ includeDrafts = false } = {}) {
         <h1>Collaboration, consulting, and project inquiries</h1>
         <p>${copy.en.contactBody}</p>
       </section>
-      <section class="contact-panel">
-        <div>
-          <span>Studio</span>
-          <strong>S&J Studio</strong>
-        </div>
-        <div>
-          <span>Email</span>
-          <a href="mailto:${site.email}">${site.email}</a>
-        </div>
-        <div>
-          <span>GitHub</span>
-          <a href="${site.github}">${site.github}</a>
-        </div>
-        <div>
-          <span>YouTube</span>
-          <strong>Official link coming soon</strong>
-        </div>
-      </section>
+      ${contactCards("en")}
     `
   }));
 
