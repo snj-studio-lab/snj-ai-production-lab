@@ -103,7 +103,7 @@ const projects = {
       ]
     },
     {
-      title: "GMI",
+      title: "SNJ ORIGINAL FILMS",
       label: "시네마틱 케이스 파일 / 제작 중",
       summary: "글로벌 시네마틱 미스터리 / 이상현상 케이스 파일 프로젝트입니다.",
       actions: [
@@ -131,7 +131,7 @@ const projects = {
       ]
     },
     {
-      title: "GMI",
+      title: "SNJ ORIGINAL FILMS",
       label: "Case Files / In Production",
       summary: "Global cinematic mystery and anomaly case files.",
       actions: [
