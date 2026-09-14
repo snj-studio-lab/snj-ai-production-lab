@@ -10,22 +10,20 @@ const publicDir = path.join(root, "public");
 const site = {
   title: "S&J Studio Lab",
   email: "snj.storylab@gmail.com",
-  github: "https://github.com/snj-studio-lab/snj-ai-production-lab",
-  koreaTimeslip: "https://www.youtube.com/@KR_Timeslip",
-  snjOriginalFilms: "https://www.youtube.com/@SNJOriginalFilms"
+  github: "https://github.com/snj-studio-lab/snj-ai-production-lab"
 };
 
-// [label, href, active keys]
+// [label, href, active keys]. Showcase is hidden while there is no published case.
 const navLabels = {
   ko: [
-    ["Films & Channels", "projects/", ["Projects"]],
+    ["Channels & Works", "projects/", ["Projects"]],
     ["Showcase", "showcase/", ["Showcase"]],
     ["Studio Lab", "lab-notes/", ["Lab Notes", "Templates"]],
     ["About", "about/", ["소개"]],
     ["Contact", "contact/", ["Contact"]]
   ],
   en: [
-    ["Films & Channels", "en/projects/", ["Projects"]],
+    ["Channels & Works", "en/projects/", ["Projects"]],
     ["Showcase", "en/showcase/", ["Showcase"]],
     ["Studio Lab", "en/lab-notes/", ["Lab Notes", "Templates"]],
     ["About", "en/about/", ["About"]],
@@ -36,13 +34,13 @@ const navLabels = {
 const copy = {
   ko: {
     description: "AI 영상 제작의 결과물뿐 아니라 실제 제작 과정에서 무너지고 복구되는 워크플로우를 기록하는 공개 제작 실험실입니다.",
-    homeDescription: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS의 오리지널 시네마틱 작품과, 그 제작 과정을 기록하는 S&J Studio의 Studio Lab.",
+    homeDescription: "S&J Studio는 장르와 형식에 얽매이지 않고, 아이디어를 다양한 오리지널 콘텐츠로 기획·제작하는 1인 크리에이터 스튜디오입니다.",
     heroEyebrow: "S&J Studio",
-    heroTitle: "시대와 세계를 넘나드는 이야기를,<br>영화로 만듭니다.",
-    heroCopy: "대한 타임슬립 본부와 SNJ ORIGINAL FILMS의 오리지널 시네마틱 작품, 그리고 그 제작 과정을 기록하는 Studio Lab.",
-    ctas: ["작품과 채널 보기", "Studio Lab"],
-    filmsEyebrow: "Films & Channels",
-    filmsTitle: "작품과 채널",
+    heroTitle: "이야기와 음악, 배움과 상상을<br>콘텐츠로 만듭니다.",
+    heroCopy: "S&J Studio는 장르와 형식에 얽매이지 않고, 아이디어를 다양한 오리지널 콘텐츠로 기획·제작하는 1인 크리에이터 스튜디오입니다.",
+    ctas: ["채널과 콘텐츠 보기", "Studio Lab"],
+    filmsEyebrow: "Channels & Works",
+    filmsTitle: "채널과 콘텐츠",
     notesEyebrow: "Inside S&J Studio",
     notesTitle: "Production Notes",
     notesBody: "완성본뿐 아니라 제작 과정에서 실제로 부딪힌 문제와 수정 과정을 공개 가능한 제작 지식으로 정리합니다.",
@@ -59,13 +57,13 @@ const copy = {
   },
   en: {
     description: "A public creator lab documenting the workflows, failures, and production systems behind AI-assisted cinematic video.",
-    homeDescription: "Original cinematic works from Korea Time-Slip HQ and SNJ ORIGINAL FILMS, with production notes from S&J Studio's Studio Lab.",
+    homeDescription: "S&J Studio is a creator-led studio developing original content across formats and genres.",
     heroEyebrow: "S&J Studio",
-    heroTitle: "Stories across eras and worlds, made cinematic.",
-    heroCopy: "Original cinematic works from Korea Time-Slip HQ and SNJ ORIGINAL FILMS, with production notes from Studio Lab.",
-    ctas: ["View Films & Channels", "Studio Lab"],
+    heroTitle: "Stories, music, learning and imagination —<br>made into original content.",
+    heroCopy: "S&J Studio is a creator-led studio developing original content across formats and genres.",
+    ctas: ["View Channels & Works", "Studio Lab"],
     filmsEyebrow: "",
-    filmsTitle: "Films & Channels",
+    filmsTitle: "Channels & Works",
     notesEyebrow: "Inside S&J Studio",
     notesTitle: "Production Notes",
     notesBody: "Notes on the real production decisions, failures, and fixes behind the work.",
@@ -82,88 +80,68 @@ const copy = {
   }
 };
 
-const projects = {
-  ko: [
-    {
-      title: "S&J Studio Lab",
-      label: "공개 제작 실험실",
-      summary: "AI 제작 실패 로그, 템플릿, 공개 노트를 정리하는 제작 실험실입니다.",
-      actions: [
-        { label: "Lab Notes 보기", href: "lab-notes/" },
-        { label: "GitHub 보기", href: site.github, external: true }
-      ]
-    },
-    {
-      title: "대한 타임슬립 본부 | Korea Time-Slip HQ",
-      image: "assets/korea-timeslip-channel-banner.webp",
-      label: "대표 작업 / 공개 채널",
-      summary: "과거·현재·미래를 넘나드는 오리지널 타임슬립 액션 시리즈입니다.",
-      actions: [
-        { label: "YouTube 채널 보기", href: site.koreaTimeslip, external: true }
-      ]
-    },
-    {
-      title: "SNJ ORIGINAL FILMS",
-      image: "assets/snj-original-films-channel-banner.webp",
-      label: "오리지널 시네마틱 필름",
-      summary: "SF · 판타지 · 액션을 넘나드는 오리지널 시네마틱 필름",
-      actions: [
-        { label: "YouTube 채널 보기", href: site.snjOriginalFilms, external: true }
-      ]
-    }
-  ],
-  en: [
-    {
-      title: "S&J Studio Lab",
-      label: "Public Lab",
-      summary: "Public notes and templates from AI production experiments.",
-      actions: [
-        { label: "Read Lab Notes", href: "en/lab-notes/" },
-        { label: "View GitHub", href: site.github, external: true }
-      ]
-    },
-    {
-      title: "Korea Time-Slip HQ",
-      image: "assets/korea-timeslip-channel-banner.webp",
-      label: "Published Channel",
-      summary: "Original cinematic time-slip action across the past, present, and future.",
-      actions: [
-        { label: "View YouTube Channel", href: site.koreaTimeslip, external: true }
-      ]
-    },
-    {
-      title: "SNJ ORIGINAL FILMS",
-      image: "assets/snj-original-films-channel-banner.webp",
-      label: "Original Cinematic Films",
-      summary: "Original cinematic films across science fiction, fantasy, and action.",
-      actions: [
-        { label: "View YouTube Channel", href: site.snjOriginalFilms, external: true }
-      ]
-    }
-  ]
+// Studio Lab panel shown under the channel catalog on Projects.
+const studioLab = {
+  ko: {
+    title: "S&J Studio Lab",
+    label: "공개 제작 실험실",
+    summary: "AI 제작 실패 로그, 템플릿, 공개 노트를 정리하는 제작 실험실입니다.",
+    actions: [
+      { label: "Lab Notes 보기", href: "lab-notes/" },
+      { label: "GitHub 보기", href: site.github, external: true }
+    ]
+  },
+  en: {
+    title: "S&J Studio Lab",
+    label: "Public Lab",
+    summary: "Public notes and templates from AI production experiments.",
+    actions: [
+      { label: "Read Lab Notes", href: "en/lab-notes/" },
+      { label: "View GitHub", href: site.github, external: true }
+    ]
+  }
 };
 
-// Home Films & Channels. Banner artwork already carries each channel title.
-const channels = [
-  {
-    name: "대한 타임슬립 본부 | Korea Time-Slip HQ",
-    image: "assets/korea-timeslip-channel-banner.webp",
-    href: site.koreaTimeslip,
-    summary: {
-      ko: "과거·현재·미래를 넘나드는 오리지널 타임슬립 액션",
-      en: "Original cinematic time-slip action across the past, present, and future."
+// Filled by build(): active channels from content/channels/ and whether Showcase appears in navigation.
+const siteState = { channels: [], showShowcaseNav: false };
+
+// Channels: one Markdown file per channel in content/channels/, named after its id.
+// Required: id, title, title_en, description_ko, description_en, youtube_url, image, status.
+// Optional: category_ko, category_en, home_order, show_on_home. Only status "active" is published.
+async function readChannels() {
+  const dir = path.join(root, "content", "channels");
+  if (!existsSync(dir)) return [];
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".md"));
+  const errors = [];
+  const channels = [];
+  for (const file of files) {
+    const { data } = parseFrontmatter(await readFile(path.join(dir, file), "utf8"));
+    const fail = (message) => errors.push(`content/channels/${file}: ${message}`);
+    for (const key of ["id", "title", "title_en", "description_ko", "description_en", "youtube_url", "image", "status"]) {
+      if (!data[key]) fail(`missing required field "${key}"`);
     }
-  },
-  {
-    name: "SNJ ORIGINAL FILMS",
-    image: "assets/snj-original-films-channel-banner.webp",
-    href: site.snjOriginalFilms,
-    summary: {
-      ko: "SF · 판타지 · 액션을 넘나드는 오리지널 시네마틱 필름",
-      en: "Original cinematic films across science fiction, fantasy, and action."
-    }
+    if (data.id && data.id !== slugFromFile(file)) fail(`id "${data.id}" must match the file name`);
+    if (data.id === "studio") fail(`id "studio" is reserved`);
+    if (data.youtube_url && !/^https?:\/\//.test(data.youtube_url)) fail(`invalid youtube_url "${data.youtube_url}"`);
+    if (data.image && !existsSync(path.join(publicDir, data.image.replace(/^\//, "")))) fail(`image "${data.image}" not found under public/`);
+    if (data.home_order && Number.isNaN(Number(data.home_order))) fail(`home_order must be a number`);
+    if (data.show_on_home && !["true", "false"].includes(data.show_on_home)) fail(`show_on_home must be true or false`);
+    channels.push(data);
   }
-];
+  if (errors.length) throw new Error(`Channel validation failed:\n${errors.join("\n")}`);
+  const order = (channel) => (channel.home_order ? Number(channel.home_order) : Infinity);
+  return channels
+    .filter((channel) => channel.status === "active")
+    .sort((a, b) => order(a) - order(b) || a.id.localeCompare(b.id));
+}
+
+function channelTitle(channel, locale) {
+  return locale === "en" ? channel.title_en : channel.title;
+}
+
+function channelImageSrc(channel, depth) {
+  return `${"../".repeat(depth)}${channel.image.replace(/^\//, "")}`;
+}
 
 function parseFrontmatter(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
@@ -321,11 +299,12 @@ function langToggle(locale, depth, alternateHref) {
 
 function pageShell({ title, documentTitle, description, active = "", body, depth = 0, locale = "ko", alternateHref, bodyClass }) {
   const base = "../".repeat(depth);
-  const navHtml = navLabels[locale].map(([label, href, keys]) => {
+  const navItems = navLabels[locale].filter(([label]) => label !== "Showcase" || siteState.showShowcaseNav);
+  const navHtml = navItems.map(([label, href, keys]) => {
     const activeClass = keys.includes(active) ? " aria-current=\"page\"" : "";
     return `<a href="${base}${href}"${activeClass}>${label}</a>`;
   }).join("");
-  const footerNavHtml = navLabels[locale].map(([label, href]) => `<a href="${base}${href}">${label}</a>`).join("");
+  const footerNavHtml = navItems.map(([label, href]) => `<a href="${base}${href}">${label}</a>`).join("");
   return `<!doctype html>
 <html lang="${locale === "ko" ? "ko" : "en"}">
   <head>
@@ -400,27 +379,30 @@ function projectActionLink(action, depth, className) {
 
 // Projects catalog: channel rows with their real banners, then the Studio Lab panel.
 function projectCatalog(locale, depth) {
-  const base = "../".repeat(depth);
-  const rows = projects[locale].filter((project) => project.image).map((project) => `
+  const cta = locale === "ko" ? "YouTube 채널 보기" : "View YouTube Channel";
+  const rows = siteState.channels.map((channel) => {
+    const category = channel[`category_${locale}`];
+    return `
       <article class="property-row">
-        <img class="property-media" src="${base}${project.image}" alt="${escapeHtml(project.title)}" width="1672" height="941">
+        <img class="property-media" src="${channelImageSrc(channel, depth)}" alt="${escapeHtml(channelTitle(channel, locale))}">
         <div class="property-body">
-          <p class="card-kicker">${escapeHtml(project.label)}</p>
-          <h2>${escapeHtml(project.title)}</h2>
-          <p>${escapeHtml(project.summary)}</p>
-          <div class="action-row">${project.actions.map((action) => projectActionLink(action, depth, "btn-primary")).join("")}</div>
+          ${category ? `<p class="card-kicker">${escapeHtml(category)}</p>` : ""}
+          <h2>${escapeHtml(channelTitle(channel, locale))}</h2>
+          <p>${escapeHtml(channel[`description_${locale}`])}</p>
+          <div class="action-row"><a class="btn-primary" href="${escapeHtml(channel.youtube_url)}" target="_blank" rel="noreferrer">${cta}</a></div>
         </div>
-      </article>`).join("");
-  const panels = projects[locale].filter((project) => !project.image).map((project) => `
+      </article>`;
+  }).join("");
+  const lab = studioLab[locale];
+  return `<section class="property-list">${rows}</section>
       <aside class="lab-panel">
         <div>
-          <p class="card-kicker">${escapeHtml(project.label)}</p>
-          <h2>${escapeHtml(project.title)}</h2>
-          <p>${escapeHtml(project.summary)}</p>
+          <p class="card-kicker">${escapeHtml(lab.label)}</p>
+          <h2>${escapeHtml(lab.title)}</h2>
+          <p>${escapeHtml(lab.summary)}</p>
         </div>
-        <div class="action-row">${project.actions.map((action) => projectActionLink(action, depth, "btn-secondary")).join("")}</div>
-      </aside>`).join("");
-  return `<section class="property-list">${rows}</section>${panels}`;
+        <div class="action-row">${lab.actions.map((action) => projectActionLink(action, depth, "btn-secondary")).join("")}</div>
+      </aside>`;
 }
 
 // Lab Notes index: newest note featured, the rest as an editorial archive.
@@ -522,7 +504,9 @@ function articlePage({ entry, locale, backLabel, list = [] }) {
 }
 
 function contactCards(locale) {
-  const timeslipName = locale === "ko" ? "대한 타임슬립 본부" : "Korea Time-Slip HQ";
+  const youtubeLinks = siteState.channels
+    .map((channel) => `<a href="${escapeHtml(channel.youtube_url)}" target="_blank" rel="noreferrer">${escapeHtml(channelTitle(channel, locale))}</a>`)
+    .join("\n          ");
   return `
       <section class="contact-panel">
         <div>
@@ -539,8 +523,7 @@ function contactCards(locale) {
         </div>
         <div>
           <span>YouTube</span>
-          <a href="${site.koreaTimeslip}" target="_blank" rel="noreferrer">${timeslipName}</a>
-          <a href="${site.snjOriginalFilms}" target="_blank" rel="noreferrer">SNJ ORIGINAL FILMS</a>
+          ${youtubeLinks}
         </div>
       </section>`;
 }
@@ -549,11 +532,12 @@ function contactCards(locale) {
 // Required: title, date, channel, media_type, cover_image (published), summary_ko, status.
 // Optional: title_en, summary_en, featured, sort_order, youtube_url, youtube_start_seconds,
 // challenge_*, direction_*, result_*, prompt_excerpt_*, tags (list), alt_ko, alt_en, Markdown body.
-const showcaseChannels = {
-  "korea-timeslip": { ko: "대한 타임슬립 본부", en: "Korea Time-Slip HQ" },
-  "snj-original-films": { ko: "SNJ ORIGINAL FILMS", en: "SNJ ORIGINAL FILMS" },
-  studio: { ko: "S&J Studio", en: "S&J Studio" }
-};
+// Allowed showcase channel values: "studio" plus every active channel id from content/channels/.
+function showcaseChannelLabel(id, locale) {
+  if (id === "studio") return "S&J Studio";
+  const channel = siteState.channels.find((entry) => entry.id === id);
+  return channel ? channelTitle(channel, locale) : undefined;
+}
 
 const showcaseCopy = {
   ko: {
@@ -602,7 +586,7 @@ async function readShowcase({ includeDrafts = false } = {}) {
     if (slugs.has(slug)) fail(`duplicate slug "${slug}"`);
     slugs.add(slug);
     if (data.status && !["published", "draft"].includes(data.status)) fail(`invalid status "${data.status}"`);
-    if (data.channel && !showcaseChannels[data.channel]) fail(`invalid channel "${data.channel}"`);
+    if (data.channel && !showcaseChannelLabel(data.channel, "ko")) fail(`invalid channel "${data.channel}"`);
     if (data.media_type && !["image", "youtube"].includes(data.media_type)) fail(`invalid media_type "${data.media_type}"`);
     if (data.date && (!/^\d{4}-\d{2}-\d{2}$/.test(data.date) || Number.isNaN(Date.parse(`${data.date}T00:00:00Z`)) || new Date(`${data.date}T00:00:00Z`).toISOString().slice(0, 10) !== data.date)) {
       fail(`invalid date "${data.date}" (expected YYYY-MM-DD)`);
@@ -664,7 +648,7 @@ function showcaseCards(items, locale, depth, headingLevel = "h2") {
           <a class="showcase-media" href="${href}" tabindex="-1" aria-hidden="true"><img src="${showcaseMediaSrc(item, depth)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async"></a>
           <div class="showcase-card-body">
             <div class="showcase-card-kicker">
-              <p class="card-kicker">${escapeHtml(showcaseChannels[item.channel][locale])}</p>
+              <p class="card-kicker">${escapeHtml(showcaseChannelLabel(item.channel, locale))}</p>
               ${locale === "en" && !english ? `<span class="pill">Available in Korean</span>` : ""}
               ${item.status === "draft" ? `<span class="pill">Draft</span>` : ""}
             </div>
@@ -729,7 +713,7 @@ function showcaseDetailBody(item, locale, list) {
           ${item.status === "draft" ? `<div class="draft-banner"><strong>LOCAL UNPUBLISHED DRAFT</strong><span>Excluded from the public build.</span></div>` : ""}
           <a class="back-link" href="../">← ${c.back}</a>
           <div class="article-meta">
-            <span>${escapeHtml(showcaseChannels[item.channel][locale])}</span>
+            <span>${escapeHtml(showcaseChannelLabel(item.channel, locale))}</span>
             <time datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
           </div>
           <header class="case-header">
@@ -749,15 +733,15 @@ function showcaseDetailBody(item, locale, list) {
       `;
 }
 
+// Home channel cards. Banner artwork already carries each channel title, so no title overlay.
 function channelCards(locale, depth) {
-  const base = "../".repeat(depth);
   const cta = locale === "ko" ? "YouTube 채널 보기" : "View YouTube Channel";
-  return channels.map((channel) => `
+  return siteState.channels.filter((channel) => channel.show_on_home !== "false").map((channel) => `
           <article class="channel-card">
-            <img class="channel-banner" src="${base}${channel.image}" alt="${escapeHtml(channel.name)}" width="1672" height="941">
+            <img class="channel-banner" src="${channelImageSrc(channel, depth)}" alt="${escapeHtml(channelTitle(channel, locale))}">
             <div class="channel-body">
-              <p>${escapeHtml(channel.summary[locale])}</p>
-              <a class="channel-cta" href="${escapeHtml(channel.href)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${channel.name} — ${cta}`)}">${cta}</a>
+              <p>${escapeHtml(channel[`description_${locale}`])}</p>
+              <a class="channel-cta" href="${escapeHtml(channel.youtube_url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${channelTitle(channel, locale)} — ${cta}`)}">${cta}</a>
             </div>
           </article>`).join("");
 }
@@ -809,7 +793,7 @@ function homePage(locale, notes, templates, showcase = []) {
   const templatesRoute = locale === "en" ? "en/templates/" : "templates/";
   return pageShell({
     title: locale === "ko" ? "홈" : "Home",
-    documentTitle: "S&J Studio — Films, Channels & Studio Lab",
+    documentTitle: "S&J Studio — Channels, Works & Studio Lab",
     description: c.homeDescription,
     active: locale === "ko" ? "홈" : "Home",
     bodyClass: "home-v2",
@@ -821,11 +805,11 @@ function homePage(locale, notes, templates, showcase = []) {
         <h1>${c.heroTitle}</h1>
         <p class="v2-lead">${c.heroCopy}</p>
         <div class="v2-actions">
-          <a class="v2-button" href="#films">${c.ctas[0]}</a>
+          <a class="v2-button" href="#channels">${c.ctas[0]}</a>
           <a class="v2-link" href="#studio-lab">${c.ctas[1]} →</a>
         </div>
       </section>
-      <section class="v2-section" id="films">
+      <section class="v2-section" id="channels">
         <div class="v2-heading">
           ${c.filmsEyebrow ? `<p class="v2-eyebrow">${c.filmsEyebrow}</p>` : ""}
           <h2>${c.filmsTitle}</h2>
@@ -893,7 +877,9 @@ export async function build({ includeDrafts = false } = {}) {
   const notesEn = await readCollection("notes-en");
   const templates = await readCollection("templates");
   const templatesEn = await readCollection("templates-en");
+  siteState.channels = await readChannels();
   const showcase = await readShowcase({ includeDrafts });
+  siteState.showShowcaseNav = showcase.some((item) => item.status === "published");
   const drafts = includeDrafts ? await readCollection("drafts") : [];
   const draftsEn = includeDrafts ? await readCollection("drafts-en") : [];
   await rm(dist, { recursive: true, force: true });
@@ -1221,7 +1207,7 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../en/projects/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Films & Channels</p>
+        <p class="eyebrow">Channels & Works</p>
         <h1>S&J Studio의 작품과 운영 채널을 소개합니다.</h1>
         <p>역사 시네마틱부터 오리지널 필름까지, 현재 공개 중인 작품과 채널을 한곳에서 만나보세요.</p>
       </section>
@@ -1237,7 +1223,7 @@ export async function build({ includeDrafts = false } = {}) {
     alternateHref: "../../projects/",
     body: `
       <section class="page-title">
-        <p class="eyebrow">Films & Channels</p>
+        <p class="eyebrow">Channels & Works</p>
         <h1>Explore S&J Studio's films and channels, from cinematic history to original screen stories.</h1>
       </section>
       ${projectCatalog("en", 2)}

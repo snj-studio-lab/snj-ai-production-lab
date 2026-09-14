@@ -766,9 +766,10 @@ main,
 .property-media {
   width: 100%;
   height: auto;
-  aspect-ratio: 1672 / 941;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   background: var(--code-bg);
+  object-fit: contain;
 }
 
 .property-body h2 {
@@ -959,13 +960,17 @@ main,
 /* Home */
 
 .v2-hero {
-  padding: clamp(64px, 10vw, 128px) 0 clamp(56px, 8vw, 104px);
+  padding: clamp(40px, 6vw, 80px) 0 clamp(36px, 5vw, 64px);
+}
+
+.v2-hero + .v2-section {
+  padding-top: clamp(36px, 5vw, 64px);
 }
 
 .v2-hero h1 {
   max-width: 940px;
-  margin-bottom: 24px;
-  font-size: clamp(2.3rem, 5.4vw, 4.5rem);
+  margin-bottom: 20px;
+  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -973,7 +978,7 @@ main,
 
 .v2-lead {
   max-width: 640px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   color: var(--ink-muted);
   font-size: clamp(1.02rem, 1.6vw, 1.2rem);
   line-height: 1.7;
@@ -1019,7 +1024,7 @@ main,
 
 .channel-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(24px, 3vw, 40px);
 }
 
@@ -1028,12 +1033,14 @@ main,
   flex-direction: column;
 }
 
+/* Banners of any ratio sit uncropped inside a 16:9 frame. */
 .channel-banner {
   width: 100%;
   height: auto;
-  aspect-ratio: 1672 / 941;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
-  background: var(--surface);
+  background: var(--code-bg);
+  object-fit: contain;
 }
 
 .channel-body {
@@ -1470,6 +1477,12 @@ main,
     grid-row: 1;
     width: 112px;
     height: 112px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .channel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
