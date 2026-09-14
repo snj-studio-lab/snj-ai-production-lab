@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, rm, writeFile, copyFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile, copyFile, cp } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,12 +19,14 @@ const site = {
 const navLabels = {
   ko: [
     ["Films & Channels", "projects/", ["Projects"]],
+    ["Showcase", "showcase/", ["Showcase"]],
     ["Studio Lab", "lab-notes/", ["Lab Notes", "Templates"]],
     ["About", "about/", ["소개"]],
     ["Contact", "contact/", ["Contact"]]
   ],
   en: [
     ["Films & Channels", "en/projects/", ["Projects"]],
+    ["Showcase", "en/showcase/", ["Showcase"]],
     ["Studio Lab", "en/lab-notes/", ["Lab Notes", "Templates"]],
     ["About", "en/about/", ["About"]],
     ["Contact", "en/contact/", ["Contact"]]
@@ -167,9 +169,20 @@ function parseFrontmatter(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) return { data: {}, body: source };
   const data = {};
+  let lastKey;
   for (const line of match[1].split(/\r?\n/)) {
+    const item = line.match(/^\s+-\s+"?([^"]*)"?\s*$/);
+    if (item && lastKey) {
+      // YAML-style list under a key with an empty value, e.g. tags.
+      if (!Array.isArray(data[lastKey])) data[lastKey] = [];
+      data[lastKey].push(item[1]);
+      continue;
+    }
     const pair = line.match(/^([A-Za-z0-9_-]+):\s*"?([^"]*)"?\s*$/);
-    if (pair) data[pair[1]] = pair[2];
+    if (pair) {
+      data[pair[1]] = pair[2];
+      lastKey = pair[1];
+    }
   }
   return { data, body: match[2].trim() };
 }
@@ -532,6 +545,210 @@ function contactCards(locale) {
       </section>`;
 }
 
+// Showcase: one Markdown file per case in content/showcase/, media in public/assets/showcase/.
+// Required: title, date, channel, media_type, cover_image (published), summary_ko, status.
+// Optional: title_en, summary_en, featured, sort_order, youtube_url, youtube_start_seconds,
+// challenge_*, direction_*, result_*, prompt_excerpt_*, tags (list), alt_ko, alt_en, Markdown body.
+const showcaseChannels = {
+  "korea-timeslip": { ko: "대한 타임슬립 본부", en: "Korea Time-Slip HQ" },
+  "snj-original-films": { ko: "SNJ ORIGINAL FILMS", en: "SNJ ORIGINAL FILMS" },
+  studio: { ko: "S&J Studio", en: "S&J Studio" }
+};
+
+const showcaseCopy = {
+  ko: {
+    title: "제작 쇼케이스",
+    intro: "S&J Studio의 실제 제작 장면과 이미지, 그리고 그 결과를 만들기 위해 선택한 제작 방향을 모았습니다.",
+    empty: ["Showcase를 준비하고 있습니다.", "S&J Studio의 제작 장면과 사례를 이곳에 순차적으로 공개합니다."],
+    view: "사례 보기",
+    all: "전체 사례 보기",
+    back: "Showcase로 돌아가기",
+    youtube: "YouTube에서 보기",
+    sections: [["challenge", "제작 과제"], ["direction", "연출·제작 방향"], ["result", "결과"]],
+    prompt: "공개 프롬프트 발췌",
+    pager: ["이전 사례", "다음 사례"]
+  },
+  en: {
+    title: "Production Showcase",
+    intro: "Selected visuals and production decisions from work made at S&J Studio.",
+    empty: ["Showcase entries are being prepared.", "Selected production visuals and case studies will be published here."],
+    view: "View Case",
+    all: "View all cases",
+    back: "Back to Showcase",
+    youtube: "Watch on YouTube",
+    sections: [["challenge", "Challenge"], ["direction", "Direction"], ["result", "Result"]],
+    prompt: "Public Prompt Excerpt",
+    pager: ["Previous case", "Next case"]
+  }
+};
+
+async function readShowcase({ includeDrafts = false } = {}) {
+  const dir = path.join(root, "content", "showcase");
+  if (!existsSync(dir)) return [];
+  const files = (await readdir(dir)).filter((file) => file.endsWith(".md"));
+  const errors = [];
+  const slugs = new Set();
+  const items = [];
+  for (const file of files) {
+    const { data, body } = parseFrontmatter(await readFile(path.join(dir, file), "utf8"));
+    const slug = slugFromFile(file);
+    const fail = (message) => errors.push(`content/showcase/${file}: ${message}`);
+    const required = ["title", "date", "channel", "media_type", "summary_ko", "status"];
+    if (data.status === "published") required.push("cover_image");
+    for (const key of required) {
+      if (!data[key]) fail(`missing required field "${key}"`);
+    }
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) fail(`file name must be a lowercase slug (a-z, 0-9, -)`);
+    if (slugs.has(slug)) fail(`duplicate slug "${slug}"`);
+    slugs.add(slug);
+    if (data.status && !["published", "draft"].includes(data.status)) fail(`invalid status "${data.status}"`);
+    if (data.channel && !showcaseChannels[data.channel]) fail(`invalid channel "${data.channel}"`);
+    if (data.media_type && !["image", "youtube"].includes(data.media_type)) fail(`invalid media_type "${data.media_type}"`);
+    if (data.date && (!/^\d{4}-\d{2}-\d{2}$/.test(data.date) || Number.isNaN(Date.parse(`${data.date}T00:00:00Z`)) || new Date(`${data.date}T00:00:00Z`).toISOString().slice(0, 10) !== data.date)) {
+      fail(`invalid date "${data.date}" (expected YYYY-MM-DD)`);
+    }
+    if (data.media_type === "youtube") {
+      if (!data.youtube_url) fail(`media_type "youtube" requires youtube_url`);
+      else if (!/^https?:\/\//.test(data.youtube_url)) fail(`invalid youtube_url "${data.youtube_url}"`);
+    }
+    if (data.youtube_start_seconds && !/^\d+$/.test(data.youtube_start_seconds)) fail(`youtube_start_seconds must be a whole number`);
+    if (data.sort_order && Number.isNaN(Number(data.sort_order))) fail(`sort_order must be a number`);
+    if (data.cover_image && !/^https?:\/\//.test(data.cover_image) && !existsSync(path.join(publicDir, data.cover_image.replace(/^\//, "")))) {
+      fail(`cover_image "${data.cover_image}" not found under public/`);
+    }
+    if (data.tags !== undefined && !Array.isArray(data.tags) && data.tags !== "") fail(`tags must be a list`);
+    items.push({ ...data, body, slug, tags: Array.isArray(data.tags) ? data.tags : [] });
+  }
+  if (errors.length) throw new Error(`Showcase validation failed:\n${errors.join("\n")}`);
+  return items
+    .filter((item) => item.status === "published" || (includeDrafts && item.status === "draft"))
+    .sort((a, b) => {
+      const orderA = a.sort_order === undefined || a.sort_order === "" ? Infinity : Number(a.sort_order);
+      const orderB = b.sort_order === undefined || b.sort_order === "" ? Infinity : Number(b.sort_order);
+      return orderA - orderB || String(b.date).localeCompare(String(a.date));
+    });
+}
+
+function showcaseHasEnglish(item) {
+  return Boolean(item.title_en && item.summary_en);
+}
+
+function showcaseMediaSrc(item, depth) {
+  return /^https?:\/\//.test(item.cover_image) ? item.cover_image : `${"../".repeat(depth)}${item.cover_image.replace(/^\//, "")}`;
+}
+
+function showcaseYoutubeHref(item) {
+  const seconds = Number(item.youtube_start_seconds || 0);
+  if (!seconds) return item.youtube_url;
+  try {
+    const url = new URL(item.youtube_url);
+    url.searchParams.set("t", `${seconds}s`);
+    return url.toString();
+  } catch {
+    return item.youtube_url;
+  }
+}
+
+// Card link target per locale: EN detail when translated, otherwise the Korean detail.
+function showcaseCards(items, locale, depth, headingLevel = "h2") {
+  const base = "../".repeat(depth);
+  const c = showcaseCopy[locale];
+  return `<div class="showcase-grid">${items.map((item) => {
+    const english = locale === "en" && showcaseHasEnglish(item);
+    const href = english ? `${base}en/showcase/${item.slug}/` : `${base}showcase/${item.slug}/`;
+    const title = english ? item.title_en : item.title;
+    const summary = english ? item.summary_en : item.summary_ko;
+    const alt = (english ? item.alt_en : item.alt_ko) || title;
+    return `
+        <article class="showcase-card">
+          <a class="showcase-media" href="${href}" tabindex="-1" aria-hidden="true"><img src="${showcaseMediaSrc(item, depth)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async"></a>
+          <div class="showcase-card-body">
+            <div class="showcase-card-kicker">
+              <p class="card-kicker">${escapeHtml(showcaseChannels[item.channel][locale])}</p>
+              ${locale === "en" && !english ? `<span class="pill">Available in Korean</span>` : ""}
+              ${item.status === "draft" ? `<span class="pill">Draft</span>` : ""}
+            </div>
+            <${headingLevel}><a href="${href}">${escapeHtml(title)}</a></${headingLevel}>
+            <p>${escapeHtml(summary)}</p>
+            ${item.tags.length ? `<ul class="tag-list">${item.tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
+            <div class="showcase-card-foot">
+              <time datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
+              <a class="text-cta" href="${href}">${c.view} →</a>
+            </div>
+          </div>
+        </article>`;
+  }).join("")}
+      </div>`;
+}
+
+function showcaseIndexBody(items, locale, depth) {
+  const c = showcaseCopy[locale];
+  const list = items.length
+    ? showcaseCards(items, locale, depth)
+    : `<section class="showcase-empty"><p><strong>${c.empty[0]}</strong></p><p>${c.empty[1]}</p></section>`;
+  return `
+      <section class="page-title">
+        <p class="eyebrow">Showcase</p>
+        <h1>${c.title}</h1>
+        <p>${c.intro}</p>
+      </section>
+      ${list}
+    `;
+}
+
+function showcaseDetailBody(item, locale, list) {
+  const c = showcaseCopy[locale];
+  const suffix = locale === "en" ? "_en" : "_ko";
+  const title = locale === "en" ? item.title_en : item.title;
+  const summary = locale === "en" ? item.summary_en : item.summary_ko;
+  const alt = item[`alt${suffix}`] || title;
+  const image = `<img src="${showcaseMediaSrc(item, locale === "en" ? 3 : 2)}" alt="${escapeHtml(alt)}">`;
+  const media = item.media_type === "youtube"
+    ? `<a class="case-media" href="${escapeHtml(showcaseYoutubeHref(item))}" target="_blank" rel="noreferrer">${image}</a>`
+    : `<div class="case-media">${image}</div>`;
+  const sections = c.sections
+    .filter(([key]) => item[`${key}${suffix}`])
+    .map(([key, label]) => `<section class="case-section"><h2>${label}</h2><p>${escapeHtml(item[`${key}${suffix}`])}</p></section>`)
+    .join("");
+  const prompt = item[`prompt_excerpt${suffix}`]
+    ? `<section class="case-section"><h2>${c.prompt}</h2><pre class="prompt-excerpt"><code>${escapeHtml(item[`prompt_excerpt${suffix}`])}</code></pre></section>`
+    : "";
+  // The Markdown body is a single-language (Korean) note, so it renders on the Korean detail only.
+  const bodyHtml = locale === "ko" && item.body ? `<div class="article-body case-body">${markdownToHtml(item.body)}</div>` : "";
+  const index = list.findIndex((entry) => entry.slug === item.slug);
+  const pagerLink = (entry, label, className) => entry
+    ? `<a class="${className}" href="../${entry.slug}/"><span>${label}</span><strong>${escapeHtml(locale === "en" ? entry.title_en : entry.title)}</strong></a>`
+    : "";
+  const older = list[index + 1];
+  const newer = index > 0 ? list[index - 1] : undefined;
+  const pager = older || newer
+    ? `<nav class="article-pager" aria-label="${locale === "ko" ? "사례 이동" : "Case navigation"}">${pagerLink(older, `← ${c.pager[0]}`, "pager-prev")}${pagerLink(newer, `${c.pager[1]} →`, "pager-next")}</nav>`
+    : "";
+  return `
+        <article class="showcase-detail">
+          ${item.status === "draft" ? `<div class="draft-banner"><strong>LOCAL UNPUBLISHED DRAFT</strong><span>Excluded from the public build.</span></div>` : ""}
+          <a class="back-link" href="../">← ${c.back}</a>
+          <div class="article-meta">
+            <span>${escapeHtml(showcaseChannels[item.channel][locale])}</span>
+            <time datetime="${escapeHtml(item.date)}">${escapeHtml(item.date)}</time>
+          </div>
+          <header class="case-header">
+            <h1>${escapeHtml(title)}</h1>
+            <p class="article-lead">${escapeHtml(summary)}</p>
+          </header>
+          ${media}
+          ${item.media_type === "youtube" ? `<div class="action-row case-actions"><a class="btn-primary" href="${escapeHtml(showcaseYoutubeHref(item))}" target="_blank" rel="noreferrer">${c.youtube} →</a></div>` : ""}
+          <div class="case-content">
+            ${sections}
+            ${prompt}
+            ${bodyHtml}
+            ${item.tags.length ? `<ul class="tag-list">${item.tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
+            ${pager}
+          </div>
+        </article>
+      `;
+}
+
 function channelCards(locale, depth) {
   const base = "../".repeat(depth);
   const cta = locale === "ko" ? "YouTube 채널 보기" : "View YouTube Channel";
@@ -567,7 +784,24 @@ function resourceRows(entries, locale, depth) {
           </a>`).join("");
 }
 
-function homePage(locale, notes, templates) {
+function homeShowcaseSection(locale, depth, showcase) {
+  const featured = showcase.filter((item) => item.status === "published" && String(item.featured) === "true").slice(0, 3);
+  if (!featured.length) return "";
+  const c = showcaseCopy[locale];
+  return `
+      <section class="v2-section" id="showcase">
+        <div class="v2-heading v2-heading-row">
+          <div>
+            <p class="v2-eyebrow">Showcase</p>
+            <h2>${c.title}</h2>
+          </div>
+          <a class="v2-link" href="${withBase(depth, locale === "en" ? "en/showcase/" : "showcase/")}">${c.all} →</a>
+        </div>
+        ${showcaseCards(featured, locale, depth, "h3")}
+      </section>`;
+}
+
+function homePage(locale, notes, templates, showcase = []) {
   const c = copy[locale];
   const depth = locale === "en" ? 1 : 0;
   const assetBase = locale === "en" ? "../" : "";
@@ -598,7 +832,7 @@ function homePage(locale, notes, templates) {
         </div>
         <div class="channel-grid">${channelCards(locale, depth)}
         </div>
-      </section>
+      </section>${homeShowcaseSection(locale, depth, showcase)}
       <section class="v2-section v2-notes" id="studio-lab">
         <div class="v2-notes-intro">
           <p class="v2-eyebrow">${c.notesEyebrow}</p>
@@ -650,10 +884,8 @@ async function copyPublic() {
   await writeFile(path.join(dist, ".nojekyll"), "", "utf8");
   await copyFile(path.join(publicDir, "styles.css"), path.join(dist, "styles.css"));
   await mkdir(path.join(dist, "assets"), { recursive: true });
-  await copyFile(path.join(publicDir, "assets", "shua-avatar.png"), path.join(dist, "assets", "shua-avatar.png"));
-  for (const asset of ["sj-studio-emblem.png", "korea-timeslip-channel-banner.webp", "snj-original-films-channel-banner.webp"]) {
-    await copyFile(path.join(publicDir, "assets", asset), path.join(dist, "assets", asset));
-  }
+  // Copies every public asset, including showcase media under public/assets/showcase/.
+  await cp(path.join(publicDir, "assets"), path.join(dist, "assets"), { recursive: true });
 }
 
 export async function build({ includeDrafts = false } = {}) {
@@ -661,13 +893,57 @@ export async function build({ includeDrafts = false } = {}) {
   const notesEn = await readCollection("notes-en");
   const templates = await readCollection("templates");
   const templatesEn = await readCollection("templates-en");
+  const showcase = await readShowcase({ includeDrafts });
   const drafts = includeDrafts ? await readCollection("drafts") : [];
   const draftsEn = includeDrafts ? await readCollection("drafts-en") : [];
   await rm(dist, { recursive: true, force: true });
   await copyPublic();
 
-  await writePage("", homePage("ko", notes, templates));
-  await writePage("en", homePage("en", notesEn, templates));
+  await writePage("", homePage("ko", notes, templates, showcase));
+  await writePage("en", homePage("en", notesEn, templates, showcase));
+
+  const showcaseEn = showcase.filter(showcaseHasEnglish);
+  await writePage("showcase", pageShell({
+    title: "Showcase",
+    active: "Showcase",
+    depth: 1,
+    locale: "ko",
+    alternateHref: "../en/showcase/",
+    description: showcaseCopy.ko.intro,
+    body: showcaseIndexBody(showcase, "ko", 1)
+  }));
+  await writePage("en/showcase", pageShell({
+    title: "Showcase",
+    active: "Showcase",
+    depth: 2,
+    locale: "en",
+    alternateHref: "../../showcase/",
+    description: showcaseCopy.en.intro,
+    body: showcaseIndexBody(showcase, "en", 2)
+  }));
+  for (const item of showcase) {
+    const english = showcaseHasEnglish(item);
+    await writePage(`showcase/${item.slug}`, pageShell({
+      title: item.title,
+      active: "Showcase",
+      depth: 2,
+      locale: "ko",
+      alternateHref: english ? `../../en/showcase/${item.slug}/` : "../../en/showcase/",
+      description: item.summary_ko,
+      body: showcaseDetailBody(item, "ko", showcase)
+    }));
+    if (english) {
+      await writePage(`en/showcase/${item.slug}`, pageShell({
+        title: item.title_en,
+        active: "Showcase",
+        depth: 3,
+        locale: "en",
+        alternateHref: `../../../showcase/${item.slug}/`,
+        description: item.summary_en,
+        body: showcaseDetailBody(item, "en", showcaseEn)
+      }));
+    }
+  }
 
   const aboutContact = (locale) => `
       <section class="about-contact">
